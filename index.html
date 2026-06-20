@@ -663,20 +663,46 @@
     window.addEventListener('resize', function(){ updateDots(); });
   }
 
+  function renderPhotoTile(url, insertAfterAdd){
+    var tile = document.createElement('div');
+    tile.className = 'tile';
+    var img = document.createElement('img');
+    img.src = url;
+    img.alt = "Shared photo";
+    tile.appendChild(img);
+    if(insertAfterAdd){
+      var addTile = galleryScroll.querySelector('.tile.add');
+      addTile.insertAdjacentElement('afterend', tile);
+    } else {
+      galleryScroll.appendChild(tile);
+    }
+    return tile;
+  }
+
+  function loadExistingPhotos(){
+    fetch('/api/get-photos')
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if(!result || !result.photos || !result.photos.length) return;
+        // oldest first, appended in order after the add-tile
+        result.photos.forEach(function(p){
+          renderPhotoTile(p.url, false);
+        });
+        attachTileClicks();
+        updateDots();
+      })
+      .catch(function(err){ console.error('Loading photos failed:', err); });
+  }
+  loadExistingPhotos();
+
   if(photoInput){
     photoInput.addEventListener('change', function(e){
       var file = e.target.files && e.target.files[0];
       if(!file) return;
 
       // Show the photo immediately using a local preview while it uploads
-      var tile = document.createElement('div');
-      tile.className = 'tile';
-      var img = document.createElement('img');
-      img.src = URL.createObjectURL(file);
-      img.alt = "Shared photo";
-      tile.appendChild(img);
-      var addTile = galleryScroll.querySelector('.tile.add');
-      addTile.insertAdjacentElement('afterend', tile);
+      var tile = renderPhotoTile(URL.createObjectURL(file), true);
+      var img = tile.querySelector('img');
       attachTileClicks();
       updateDots();
 
@@ -723,17 +749,38 @@
   }
   updateTaCount();
 
+  function renderTakeawayPill(n, t, prepend){
+    var pill = document.createElement('span');
+    pill.className = 'ta-pill';
+    pill.innerHTML = '<span class="ta-avatar"></span><span class="who"></span> · <span class="msg"></span>';
+    pill.querySelector('.ta-avatar').textContent = (n||'G').charAt(0).toUpperCase();
+    pill.querySelector('.who').textContent = n;
+    pill.querySelector('.msg').textContent = t;
+    if(prepend){ taWall.insertBefore(pill, taWall.firstChild); }
+    else { taWall.appendChild(pill); }
+  }
+
+  function loadExistingTakeaways(){
+    fetch('/api/get-takeaways')
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if(!result || !result.takeaways || !result.takeaways.length) return;
+        taWall.innerHTML = ''; // clear the hardcoded sample pills
+        // oldest first, each prepended -> newest ends up on top, same as live adds
+        result.takeaways.forEach(function(item){
+          renderTakeawayPill(item.name, item.takeaway, true);
+        });
+        updateTaCount();
+      })
+      .catch(function(err){ console.error('Loading takeaways failed:', err); });
+  }
+  loadExistingTakeaways();
+
   function addTakeaway(){
     var n = (taName.value||"").trim() || "Guest";
     var t = (taText.value||"").trim();
     if(!t){ taText.focus(); return; }
-    var pill = document.createElement('span');
-    pill.className = 'ta-pill';
-    pill.innerHTML = '<span class="ta-avatar"></span><span class="who"></span> · <span class="msg"></span>';
-    pill.querySelector('.ta-avatar').textContent = n.charAt(0).toUpperCase();
-    pill.querySelector('.who').textContent = n;
-    pill.querySelector('.msg').textContent = t;
-    taWall.insertBefore(pill, taWall.firstChild);
+    renderTakeawayPill(n, t, true);
     updateTaCount();
 
     fetch('/api/submit-takeaway', {
