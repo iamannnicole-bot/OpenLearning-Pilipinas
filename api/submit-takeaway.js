@@ -1,7 +1,11 @@
 // /api/submit-takeaway.js
-// Receives a "One skill I'm taking home..." wall entry and forwards it to a
-// Google Form's public submission endpoint (invisible to the visitor),
-// which writes a row directly into the linked Google Sheet.
+// Receives a "One skill I'm taking home..." wall entry. Saves it two places:
+// 1. Vercel Blob (as a small JSON file) -- this is what get-takeaways.js reads
+//    back on page load, since it's reliable and has no Google auth issues.
+// 2. The Google Form's submission endpoint -- purely for your own reporting
+//    record in the Sheet; not used to repopulate the live wall.
+
+import { put } from '@vercel/blob';
 
 const FORM_ACTION_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSf39A1IK39imvnU6IePo4dw0Lakx-g0W_z3EfUSDMujP_fE2A/formResponse';
@@ -23,18 +27,35 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing takeaway text' });
     }
 
-    const params = new URLSearchParams();
-    params.append(ENTRY_MAP.name, (name || 'Guest').trim());
-    params.append(ENTRY_MAP.takeaway, String(takeaway).trim());
+    const cleanName = (name || 'Guest').trim();
+    const cleanTakeaway = String(takeaway).trim();
 
-    const upstream = await fetch(FORM_ACTION_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString(),
-    });
+    // 1. Save to Blob so it can be read back on page load
+    try {
+      const payload = JSON.stringify({ name: cleanName, takeaway: cleanTakeaway });
+      const filename = `takeaways/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`;
+      await put(filename, payload, {
+        access: 'public',
+        contentType: 'application/json',
+      });
+    } catch (blobErr) {
+      console.error('Saving takeaway to Blob failed:', blobErr);
+      // continue -- still try the Form log below
+    }
 
-    if (!upstream.ok && upstream.status !== 0) {
-      console.error('Form submission returned status:', upstream.status);
+    // 2. Best-effort log to the Form/Sheet for reporting purposes
+    try {
+      const params = new URLSearchParams();
+      params.append(ENTRY_MAP.name, cleanName);
+      params.append(ENTRY_MAP.takeaway, cleanTakeaway);
+
+      await fetch(FORM_ACTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
+      });
+    } catch (formErr) {
+      console.error('Logging takeaway to Form failed (Blob save still succeeded):', formErr);
     }
 
     return res.status(200).json({ status: 'ok' });
