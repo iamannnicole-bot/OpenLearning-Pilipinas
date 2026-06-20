@@ -667,6 +667,8 @@
     photoInput.addEventListener('change', function(e){
       var file = e.target.files && e.target.files[0];
       if(!file) return;
+
+      // Show the photo immediately using a local preview while it uploads
       var tile = document.createElement('div');
       tile.className = 'tile';
       var img = document.createElement('img');
@@ -677,6 +679,25 @@
       addTile.insertAdjacentElement('afterend', tile);
       attachTileClicks();
       updateDots();
+
+      // Upload to Vercel Blob so the photo is shared with every visitor, not just this browser
+      fetch('/api/upload-photo', {
+        method: 'POST',
+        headers: {
+          'content-type': file.type || 'application/octet-stream',
+          'x-filename': encodeURIComponent(file.name || 'photo.jpg')
+        },
+        body: file
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(result){
+          if(result && result.url){
+            img.src = result.url; // swap local preview for the real shared URL
+          }
+        })
+        .catch(function(err){ console.error('Photo upload failed:', err); });
+
+      photoInput.value = '';
     });
   }
 
@@ -714,6 +735,13 @@
     pill.querySelector('.msg').textContent = t;
     taWall.insertBefore(pill, taWall.firstChild);
     updateTaCount();
+
+    fetch('/api/submit-takeaway', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: n, takeaway: t })
+    }).catch(function(err){ console.error('Takeaway submit failed:', err); });
+
     taName.value=''; taText.value=''; updateCounter(); taText.focus();
   }
   if(taAdd) taAdd.addEventListener('click', addTakeaway);
@@ -760,15 +788,25 @@
         qualifyCard.querySelector('[data-k="email"]').focus();
         return;
       }
-      /* In production: POST `data` to HubSpot / your CRM / OpenLearning booking here. */
-      console.log("Lead captured:", data);
-      var first = data.name.split(' ')[0];
-      var done = document.createElement('div');
-      done.className = 'done';
-      done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p>';
-      done.querySelector('h4').textContent = "You're on the list!";
-      done.querySelector('p').textContent = "Thanks, " + first + " — the OpenLearning Pilipinas team will review your request and reach out shortly.";
-      qualifyCard.replaceWith(done);
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .catch(function(err){ console.error('Lead submit failed:', err); })
+        .finally(function(){
+          var first = data.name.split(' ')[0];
+          var done = document.createElement('div');
+          done.className = 'done';
+          done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p>';
+          done.querySelector('h4').textContent = "You're on the list!";
+          done.querySelector('p').textContent = "Thanks, " + first + " — the OpenLearning Pilipinas team will review your request and reach out shortly.";
+          qualifyCard.replaceWith(done);
+        });
     });
   }
 })();
