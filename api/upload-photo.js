@@ -2,7 +2,8 @@
 // Receives a raw image file from the gallery "Add your photo" button,
 // uploads it to Vercel Blob storage (so every visitor sees the same shared
 // gallery, not just the uploader's own browser), then logs the resulting
-// URL to the "Photo Album Log" tab via the Apps Script Web App.
+// URL to a Google Form's public submission endpoint, which writes a row
+// into the linked Sheet's Photo Log tab.
 
 import { put } from '@vercel/blob';
 
@@ -11,6 +12,16 @@ export const config = {
   api: {
     bodyParser: false,
   },
+};
+
+const FORM_ACTION_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLScC8uaYhHB5m7wIggoA4Va6qUMoaNcRVUdUMS3FwHCkMaKR-g/formResponse';
+
+const ENTRY_MAP = {
+  uploadedBy: 'entry.1842092294',
+  url: 'entry.1970281814',
+  caption: 'entry.1784723861',
+  platform: 'entry.405985498',
 };
 
 function readRawBody(req) {
@@ -44,28 +55,23 @@ export default async function handler(req, res) {
     const blob = await put(filename, fileBuffer, {
       access: 'public',
       contentType,
-      // BLOB_READ_WRITE_TOKEN is added automatically by Vercel once you
-      // create the Blob store in the Storage tab — no need to set it yourself.
     });
 
-    // Best-effort log to the spreadsheet; don't fail the upload if this fails
-    const appsScriptUrl = process.env.APPS_SCRIPT_URL;
-    if (appsScriptUrl) {
-      try {
-        await fetch(appsScriptUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'photo',
-            url: blob.url,
-            uploadedBy: '',
-            caption: 'Shared photo',
-            platform: 'Gallery',
-          }),
-        });
-      } catch (logErr) {
-        console.error('Photo log to sheet failed (upload still succeeded):', logErr);
-      }
+    // Best-effort log to the Google Form; don't fail the upload if this fails
+    try {
+      const params = new URLSearchParams();
+      params.append(ENTRY_MAP.uploadedBy, '');
+      params.append(ENTRY_MAP.url, blob.url);
+      params.append(ENTRY_MAP.caption, 'Shared photo');
+      params.append(ENTRY_MAP.platform, 'Gallery');
+
+      await fetch(FORM_ACTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
+      });
+    } catch (logErr) {
+      console.error('Photo log to Form failed (upload still succeeded):', logErr);
     }
 
     return res.status(200).json({ url: blob.url });

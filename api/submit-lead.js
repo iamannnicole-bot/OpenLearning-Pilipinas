@@ -1,7 +1,30 @@
 // /api/submit-lead.js
-// Receives the "Your Next Step" qualifier form and forwards it to the
-// Google Apps Script Web App, which appends a row to the
-// "Your Next Step Form" tab of the event tracker spreadsheet.
+// Receives the "Your Next Step" qualifier form and forwards it to a
+// Google Form's public submission endpoint (invisible to the visitor),
+// which writes a row directly into the linked Google Sheet.
+//
+// This avoids the Apps Script "who can execute" org restriction entirely,
+// since Google Forms accept anonymous public submissions by design.
+
+const FORM_ACTION_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfxNKCpF9oiO9s_Kf_gKs0_K0mnSX-GWU_R6qljBEkTCpI5-w/formResponse';
+
+// Maps our internal field names to this Form's entry IDs (from the
+// Network tab capture). If you ever edit/reorder questions in the Form,
+// these IDs can change -- recapture them if submissions stop appearing.
+const ENTRY_MAP = {
+  name: 'entry.509920607',
+  email: 'entry.1270745515',
+  mobile: 'entry.333238658',
+  title: 'entry.2126527519',
+  org: 'entry.1316741458',
+  orgType: 'entry.2079248707',
+  learners: 'entry.1767292537',
+  lms: 'entry.1248203828',
+  timeline: 'entry.1809188210',
+  intent: 'entry.2002061899',
+  goals: 'entry.1155627175',
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,20 +41,24 @@ export default async function handler(req, res) {
       }
     }
 
-    const appsScriptUrl = process.env.APPS_SCRIPT_URL;
-    if (!appsScriptUrl) {
-      console.error('APPS_SCRIPT_URL env var is not set');
-      return res.status(500).json({ error: 'Server misconfigured' });
+    const params = new URLSearchParams();
+    for (const [key, entryId] of Object.entries(ENTRY_MAP)) {
+      params.append(entryId, data[key] || '');
     }
 
-    const upstream = await fetch(appsScriptUrl, {
+    const upstream = await fetch(FORM_ACTION_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'lead', ...data }),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
     });
 
-    const result = await upstream.json();
-    return res.status(200).json(result);
+    // Google Forms responds with an HTML page (not JSON) on success/redirect.
+    // A non-network-error response here means the submission was accepted.
+    if (!upstream.ok && upstream.status !== 0) {
+      console.error('Form submission returned status:', upstream.status);
+    }
+
+    return res.status(200).json({ status: 'ok' });
   } catch (err) {
     console.error('submit-lead error:', err);
     return res.status(500).json({ error: 'Failed to submit lead' });
