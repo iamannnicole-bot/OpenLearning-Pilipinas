@@ -156,6 +156,29 @@
   .gallery-dotbar button:disabled{opacity:.3;cursor:default}
   .gallery-hint{text-align:center;font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:8px}
 
+  .viewall-btn{display:flex;width:100%;margin-top:16px}
+
+  .photo-grid-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+    padding-bottom:max(16px, env(safe-area-inset-bottom));
+    background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
+  .photo-grid-modal.active{display:flex}
+  .photo-grid-panel{position:relative;width:100%;max-width:720px;max-height:calc(100dvh - 32px);
+    overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
+    display:flex;flex-direction:column}
+  .photo-grid-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex:none}
+  .photo-grid-header h3{font-weight:700;font-size:1.1rem;color:var(--ink)}
+  .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
+    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer}
+  .photo-grid-header .close:hover{background:var(--line)}
+  .photo-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;
+    -webkit-overflow-scrolling:touch}
+  @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
+  .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
+  .grid-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .15s ease}
+  .grid-tile:hover img{transform:scale(1.05)}
+
   .photo-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
     padding:16px;padding-top:max(16px, env(safe-area-inset-top));
     padding-bottom:max(16px, env(safe-area-inset-bottom));
@@ -354,6 +377,17 @@
         <button type="button" data-dot="2" class="next" aria-label="Next photos"></button>
       </div>
       <p class="gallery-hint">Swipe the photos, or tap the dots to browse →</p>
+      <button class="btn btn-teal viewall-btn" id="viewAllPhotosBtn" type="button">View all photos</button>
+    </div>
+
+    <div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
+      <div class="photo-grid-panel">
+        <div class="photo-grid-header">
+          <h3>All photos</h3>
+          <button class="close" id="photoGridClose" aria-label="Close">×</button>
+        </div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
     </div>
 
     <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
@@ -387,11 +421,7 @@
           <button class="btn btn-ink" id="taAdd">Add to wall</button>
         </div>
       </div>
-      <div class="ta-wall" id="taWall">
-        <span class="ta-pill"><span class="ta-avatar">M</span><span class="who">Maria</span> · Prompting for the classroom</span>
-        <span class="ta-pill"><span class="ta-avatar">J</span><span class="who">Josh</span> · Building learner data dashboards</span>
-        <span class="ta-pill"><span class="ta-avatar">L</span><span class="who">Liza</span> · AI ethics for L&amp;D teams</span>
-      </div>
+      <div class="ta-wall" id="taWall"></div>
     </div>
   </div>
 </section>
@@ -653,7 +683,45 @@
 
   if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
   if(lightbox) lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLightbox(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeLightbox(); closePhotoGrid(); } });
+
+  /* ---------------- VIEW ALL PHOTOS: scrollable phone-style grid ---------------- */
+  var viewAllBtn = document.getElementById('viewAllPhotosBtn');
+  var photoGridModal = document.getElementById('photoGridModal');
+  var photoGrid = document.getElementById('photoGrid');
+  var photoGridClose = document.getElementById('photoGridClose');
+
+  function openPhotoGrid(){
+    if(!photoGridModal || !photoGrid) return;
+    photoGrid.innerHTML = '';
+    var tiles = Array.prototype.slice.call(galleryScroll.querySelectorAll('.tile:not(.add)'));
+    tiles.forEach(function(t){
+      var img = t.querySelector('img');
+      if(!img) return;
+      var gTile = document.createElement('div');
+      gTile.className = 'grid-tile';
+      var gImg = document.createElement('img');
+      gImg.src = img.src;
+      gImg.alt = img.alt || 'Shared photo';
+      gTile.appendChild(gImg);
+      gTile.addEventListener('click', function(){ openLightbox(gTile); });
+      photoGrid.appendChild(gTile);
+    });
+    photoGridModal.classList.add('active');
+    photoGridModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  }
+
+  function closePhotoGrid(){
+    if(!photoGridModal) return;
+    photoGridModal.classList.remove('active');
+    photoGridModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  if(viewAllBtn) viewAllBtn.addEventListener('click', openPhotoGrid);
+  if(photoGridClose) photoGridClose.addEventListener('click', closePhotoGrid);
+  if(photoGridModal) photoGridModal.addEventListener('click', function(e){ if(e.target === photoGridModal) closePhotoGrid(); });
 
   if(galleryScroll){
     galleryScroll.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); });
@@ -684,9 +752,11 @@
       .then(function(res){ return res.json(); })
       .then(function(result){
         if(!result || !result.photos || !result.photos.length) return;
-        // oldest first, appended in order after the add-tile
+        // API returns oldest-first; inserting each one "after the add tile" in that
+        // order means the last one inserted (the newest) ends up right after Add —
+        // same stacking behavior as a brand-new live upload.
         result.photos.forEach(function(p){
-          renderPhotoTile(p.url, false);
+          renderPhotoTile(p.url, true);
         });
         attachTileClicks();
         updateDots();
