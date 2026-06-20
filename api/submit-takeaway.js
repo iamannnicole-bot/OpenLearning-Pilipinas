@@ -1,9 +1,4 @@
 // /api/submit-takeaway.js
-// Receives a "One skill I'm taking home..." wall entry. Saves it two places:
-// 1. Vercel Blob (as a small JSON file) -- this is what get-takeaways.js reads
-//    back on page load, since it's reliable and has no Google auth issues.
-// 2. The Google Form's submission endpoint -- purely for your own reporting
-//    record in the Sheet; not used to repopulate the live wall.
 
 import { put } from '@vercel/blob';
 

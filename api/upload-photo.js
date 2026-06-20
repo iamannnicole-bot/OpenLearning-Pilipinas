@@ -1,9 +1,4 @@
 // /api/upload-photo.js
-// Receives a raw image file from the gallery "Add your photo" button,
-// uploads it to Vercel Blob storage (so every visitor sees the same shared
-// gallery, not just the uploader's own browser), then logs the resulting
-// URL to a Google Form's public submission endpoint, which writes a row
-// into the linked Sheet's Photo Log tab.
 
 import { put } from '@vercel/blob';
 

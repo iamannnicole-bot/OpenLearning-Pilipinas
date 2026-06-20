@@ -1,10 +1,4 @@
 // /api/submit-lead.js
-// Receives the "Your Next Step" qualifier form and forwards it to a
-// Google Form's public submission endpoint (invisible to the visitor),
-// which writes a row directly into the linked Google Sheet.
-//
-// This avoids the Apps Script "who can execute" org restriction entirely,
-// since Google Forms accept anonymous public submissions by design.
 
 const FORM_ACTION_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSfxNKCpF9oiO9s_Kf_gKs0_K0mnSX-GWU_R6qljBEkTCpI5-w/formResponse';

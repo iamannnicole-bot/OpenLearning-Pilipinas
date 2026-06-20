@@ -1,12 +1,4 @@
 // /api/get-takeaways.js
-// Reads existing takeaway-wall entries back from Vercel Blob (where
-// submit-takeaway.js saves each one as a small JSON file), so the wall
-// repopulates on page load instead of starting empty.
-//
-// This replaced an earlier version that read from a published Google
-// Sheets CSV -- that approach was blocked by an organization policy that
-// requires Google sign-in even for "Publish to web" links, which Vercel's
-// server can never provide. Blob has no such restriction.
 
 import { list } from '@vercel/blob';
 
