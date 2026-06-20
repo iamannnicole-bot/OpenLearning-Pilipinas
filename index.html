@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OpenLearning Pilipinas 2026 · AI, Skills & the Future of Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#29A79F;
+    --teal-bright:#46D6C8;
+    --teal-deep:#0C4F54;
+    --teal-deeper:#06363C;
+    --ink:#052A3B;
+    --yellow:#FDCC11;
+    --yellow-deep:#E7B900;
+    --mist:#F8F9F9;
+    --mist-tint:#ECF6F4;
+    --paper:#FFFFFF;
+    --line:#E2EAEA;
+    --ink-soft:#56696F;
+    --violet:#8A7BFF;
+    --cyan:#7FF0FF;
+    --radius:18px;
+    --shadow:0 18px 50px -24px rgba(5,42,59,.4);
+    --display:"Figtree", system-ui, sans-serif;
+    --body:"Open Sans", system-ui, -apple-system, sans-serif;
+    --topbar-h:60px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--ink);background:var(--mist);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body.no-scroll{overflow:hidden}
+  h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.02em;line-height:1.08}
+  .wrap{width:100%;max-width:560px;margin:0 auto;padding:0 22px}
+  @media(min-width:920px){ .wrap{max-width:1080px;padding:0 40px} }
+  .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+
+  /* ---- glow primitives ---- */
+  .orb{position:absolute;border-radius:50%;filter:blur(58px);opacity:.55;pointer-events:none;z-index:0;
+    animation:drift 16s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(14px,-18px) scale(1.08)}}
+  .spark{position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;pointer-events:none;z-index:1;
+    box-shadow:0 0 8px 2px var(--cyan), 0 0 22px 6px rgba(127,240,255,.5);
+    animation:twinkle 4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.25)}}
+
+  /* ---- brand mark ---- */
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;min-width:0}
+  .brand-logo{height:34px;width:auto;display:block}
+  .brand-logo-big{height:82px;width:auto;display:block}
+  .ring{width:24px;height:24px;flex:none;position:relative}
+  .ring svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(70,214,200,.7))}
+  .brand .lo{color:var(--teal);white-space:nowrap}
+  .brand.on-dark .lo{color:#fff}
+
+  /* ---- top bar ---- */
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(248,249,249,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;height:var(--topbar-h);min-width:0}
+  .tag-chip{font-family:var(--body);font-size:.72rem;font-weight:700;color:var(--teal-deep);background:#fff;
+    border:1px solid var(--line);border-radius:999px;padding:5px 12px;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis;max-width:62vw}
+  .tag-chip b{color:var(--teal)}
+  .tag-chip .long{display:inline}
+  @media(max-width:480px){
+    .tag-chip{font-size:.64rem;padding:5px 10px;max-width:54vw}
+    .tag-chip .long{display:none}
+  }
+
+  /* ---- hero (deep teal + glow) ---- */
+  .hero{position:relative;overflow:hidden;color:#fff;text-align:center;
+    background:linear-gradient(160deg,#13727A 0%, var(--teal-deep) 46%, var(--teal-deeper) 100%)}
+  .hero .orb.a{width:360px;height:360px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-90px;right:-60px;opacity:.5}
+  .hero .orb.b{width:300px;height:300px;background:radial-gradient(circle,var(--violet),transparent 65%);bottom:-110px;left:-70px;opacity:.42}
+  .hero .orb.c{width:220px;height:220px;background:radial-gradient(circle,var(--cyan),transparent 60%);bottom:6%;right:8%;opacity:.4}
+  .hero .wrap{position:relative;z-index:2;padding-top:40px;padding-bottom:52px}
+  .hero-brand{justify-content:center;margin-bottom:24px}
+  .pill{display:inline-block;font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.08em;
+    color:#fff;background:rgba(70,214,200,.18);border:1px solid rgba(70,214,200,.5);
+    padding:7px 16px;border-radius:999px;box-shadow:0 0 22px -4px rgba(70,214,200,.6);text-transform:uppercase}
+  .hero h1{font-weight:800;font-size:clamp(2.3rem,9.5vw,4.6rem);margin:18px auto 0;max-width:14ch}
+  .hero h1 .y{color:var(--yellow);text-shadow:0 0 26px rgba(253,204,17,.45)}
+  .hero .meta{margin-top:16px;font-size:.96rem;color:rgba(255,255,255,.82);font-weight:500;padding:0 8px}
+  .hero .meta b{color:#fff;font-weight:700}
+  .hashtag{display:inline-block;margin-top:22px;font-family:var(--display);font-weight:700;font-size:.92rem;
+    color:var(--ink);background:var(--yellow);padding:8px 16px;border-radius:999px;
+    box-shadow:0 0 30px -4px rgba(253,204,17,.8)}
+  .hero .cta{margin-top:22px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:700;
+    font-size:1rem;cursor:pointer;border:none;border-radius:999px;padding:14px 28px;text-decoration:none;
+    transition:transform .15s ease, box-shadow .25s ease, background .2s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-yellow{background:var(--yellow);color:var(--ink);box-shadow:0 0 28px -6px rgba(253,204,17,.85)}
+  .btn-yellow:hover{background:#ffd633;box-shadow:0 0 38px -4px rgba(253,204,17,1)}
+  .btn-teal{background:var(--teal);color:#fff;box-shadow:0 0 26px -8px rgba(41,167,159,.9)}
+  .btn-teal:hover{background:#22938c;box-shadow:0 0 34px -4px rgba(41,167,159,1)}
+  .btn-ink{background:var(--ink);color:#fff}
+  .btn-ink:hover{background:#0a3a4f}
+  .btn-violet{background:var(--violet);color:#fff;box-shadow:0 0 24px -8px rgba(138,123,255,.9)}
+  .btn-violet:hover{background:#7a6aff}
+  .btn-block{display:flex;width:100%}
+
+  .sunline{height:3px;border:0;margin:0;background:linear-gradient(90deg,transparent,var(--teal-bright),var(--yellow),var(--teal-bright),transparent);
+    box-shadow:0 0 16px rgba(70,214,200,.5)}
+
+  section{padding:50px 0;position:relative;overflow:hidden}
+  @media(min-width:680px){ section{padding:58px 0} }
+  .sec-head{margin-bottom:24px;position:relative;z-index:2}
+  .sec-head .eyebrow{color:var(--teal);margin-bottom:10px}
+  .sec-head h2{font-weight:800;font-size:clamp(1.7rem,6.5vw,2.7rem);color:var(--ink)}
+  .sec-head p{font-family:var(--body);color:var(--ink-soft);margin-top:10px;max-width:48ch}
+
+  /* ---- relive ---- */
+  .relive{background:var(--paper)}
+  .relive .orb.soft{width:300px;height:300px;background:radial-gradient(circle,var(--teal),transparent 70%);opacity:.1;top:-80px;right:-60px}
+  .relive .wrap{position:relative;z-index:2}
+  .share-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .share-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-size:.88rem;font-weight:600;
+    color:var(--ink);background:var(--mist);border:1px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;text-decoration:none;transition:.15s}
+  .share-btn:hover{background:#fff;border-color:var(--teal);color:var(--teal);box-shadow:0 0 18px -6px rgba(41,167,159,.6)}
+  .share-btn svg{width:17px;height:17px;flex:none}
+
+  /* ---- gallery: scrollable strip + 3-dot bar ---- */
+  .gallery{position:relative;z-index:2}
+  .gallery-scroll{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:6px;padding-bottom:2px;margin:0 -4px -6px;padding-inline:4px
+  }
+  .gallery-scroll::-webkit-scrollbar{display:none}
+  .gallery-scroll .tile{
+    flex:0 0 calc(50% - 5px);scroll-snap-align:start;
+  }
+  @media(min-width:560px){ .gallery-scroll .tile{flex-basis:calc(33.333% - 7px)} }
+  @media(min-width:920px){ .gallery-scroll .tile{flex-basis:calc(25% - 7.5px)} }
+  .tile{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--teal-deep),var(--teal-deeper));color:rgba(255,255,255,.6);
+    font-family:var(--display);font-size:.74rem;font-weight:600;text-align:center;padding:8px;cursor:pointer;transition:transform .18s ease}
+  .tile:hover{transform:translateY(-2px)}
+  .tile img{width:100%;height:100%;object-fit:cover}
+  .tile.t2{background:linear-gradient(135deg,var(--teal),var(--teal-bright))}
+  .tile.t3{background:linear-gradient(135deg,var(--violet),var(--teal-deep))}
+  .tile.add{background:#fff;border:2px dashed var(--line);color:var(--ink-soft);cursor:pointer;flex-direction:column;gap:6px;transition:.15s}
+  .tile.add .plus{font-size:1.7rem;font-weight:300;line-height:1}
+  .tile.add:hover{border-color:var(--teal);color:var(--teal);box-shadow:0 0 22px -8px rgba(41,167,159,.6)}
+
+  .gallery-dotbar{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:18px}
+  .gallery-dotbar button{width:11px;height:11px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;
+    transition:.18s;position:relative}
+  .gallery-dotbar button::after{content:"";position:absolute;inset:-13px}/* bigger tap target */
+  .gallery-dotbar button.active{background:var(--teal);box-shadow:0 0 0 5px rgba(41,167,159,.14);transform:scale(1.15)}
+  .gallery-dotbar button.next{background:var(--ink-soft)}
+  .gallery-dotbar button.next.active{background:var(--teal)}
+  .gallery-dotbar button:disabled{opacity:.3;cursor:default}
+  .gallery-hint{text-align:center;font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:8px}
+
+  .viewall-btn{display:flex;width:100%;margin-top:16px}
+
+  .photo-grid-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+    padding-bottom:max(16px, env(safe-area-inset-bottom));
+    background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
+  .photo-grid-modal.active{display:flex}
+  .photo-grid-panel{position:relative;width:100%;max-width:720px;
+    max-height:min(80dvh, calc(100dvh - 32px));
+    overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
+    display:flex;flex-direction:column}
+  .photo-grid-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex:none;background:#fff}
+  .photo-grid-header h3{font-weight:700;font-size:1.1rem;color:var(--ink)}
+  .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
+    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none}
+  .photo-grid-header .close:hover{background:var(--line)}
+  .photo-grid{flex:0 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
+    -webkit-overflow-scrolling:touch}
+  @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
+  .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
+  .grid-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .15s ease}
+  .grid-tile:hover img{transform:scale(1.05)}
+
+  .photo-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+    padding-bottom:max(16px, env(safe-area-inset-bottom));
+    background:rgba(5,42,59,.92);z-index:999;isolation:isolate}
+  .photo-lightbox.active{display:flex}
+  .photo-lightbox .lightbox-panel{position:relative;width:100%;max-width:980px;max-height:calc(100dvh - 32px);
+    overflow:auto;border-radius:24px;background:#04191f;box-shadow:0 0 80px rgba(0,0,0,.55)}
+  .photo-lightbox .lightbox-img{background:#04191f;display:flex;align-items:center;justify-content:center;min-height:220px;padding:16px}
+  .photo-lightbox .lightbox-img img{max-width:100%;max-height:min(70dvh,640px);object-fit:contain;border-radius:14px;display:block}
+  .photo-lightbox .lightbox-text{color:#fff;font-size:1.05rem;padding:24px;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;line-height:1.4}
+  .photo-lightbox .lightbox-caption{color:#fff;padding:16px 18px;font-size:.95rem;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+  .photo-lightbox button.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2}
+  .photo-lightbox button.close:hover{background:rgba(255,255,255,.26)}
+
+  /* ---- takeaway ---- */
+  .takeaway{margin-top:30px;background:linear-gradient(180deg,#fff,var(--mist-tint));border-radius:var(--radius);
+    padding:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
+  @media(min-width:560px){ .takeaway{padding:26px} }
+  .takeaway-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .ta-icon{flex:none;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--yellow),#ffe27a);
+    display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 0 18px -4px rgba(253,204,17,.7)}
+  .takeaway-head h3{font-weight:700;font-size:1.2rem;color:var(--ink)}
+  .takeaway .count{font-family:var(--body);font-size:.85rem;color:var(--ink-soft);margin-top:3px}
+  .takeaway .count b{color:var(--teal)}
+  .ta-form{display:grid;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  @media(min-width:680px){ .ta-form{grid-template-columns:.85fr 1.3fr auto;align-items:start} }
+  .ta-field label{display:block;font-family:var(--display);font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--ink-soft);margin-bottom:6px;min-height:1.3em}
+  .ta-field label.spacer{visibility:hidden}
+  .ta-field input{width:100%;font-family:var(--body);font-size:.95rem;color:var(--ink);border:1px solid var(--line);
+    border-radius:10px;padding:11px 13px;background:var(--mist)}
+  .ta-field input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent;background:#fff}
+  .ta-counter{display:block;text-align:right;font-family:var(--body);font-size:.72rem;color:var(--ink-soft);margin-top:4px}
+  .ta-form .btn{white-space:nowrap}
+  @media(max-width:679px){ .ta-form .btn{width:100%} }
+  .ta-wall{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .ta-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-size:.85rem;font-weight:500;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;color:var(--ink);animation:pop .25s ease}
+  .ta-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-bright));
+    color:#fff;font-family:var(--display);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .ta-pill .who{color:var(--teal);font-weight:700}
+  @keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+
+  /* ---- qualifier: unified form ---- */
+  .qualify{background:linear-gradient(180deg,var(--mist),var(--mist-tint))}
+  .qform-card{position:relative;z-index:2;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px;max-width:760px;margin:0 auto}
+  @media(min-width:560px){ .qform-card{padding:30px} }
+
+  .field{margin-top:16px}
+  .qform-card .field:first-child{margin-top:0}
+  .field label{display:block;font-family:var(--display);font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;font-family:var(--body);font-size:.95rem;color:var(--ink);
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+  .field select{
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    padding-right:42px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2356696F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    background-size:16px;
+  }
+  .field textarea{resize:vertical;min-height:74px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+  .row2{display:grid;gap:12px}
+  @media(min-width:480px){
+    .row2{grid-template-columns:1fr 1fr;align-items:end}
+    .row2 .field{margin-top:0}
+    .row2 .field label{min-height:2.7em;display:flex;align-items:flex-end}
+  }
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chip{font-family:var(--body);font-size:.85rem;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);
+    border-radius:999px;padding:8px 14px;cursor:pointer;transition:.12s;user-select:none}
+  .chip:hover{border-color:var(--teal)}
+  .chip.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 0 18px -6px rgba(41,167,159,.8)}
+
+  .form-section-title{font-family:var(--display);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--teal);margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .qform-card .form-section-title:first-child{margin-top:0;padding-top:0;border-top:none}
+  .req{color:var(--teal);font-weight:700}
+
+  .radio-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:11px 0}
+  .radio-opt{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:.92rem;color:var(--ink);cursor:pointer}
+  .radio-opt input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex:none}
+
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+  .submit-row{margin-top:22px}
+  .form-note{font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:12px;text-align:center}
+  .done{text-align:center;padding:30px 6px;animation:slidein .3s ease}
+  .done .mark{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 35% 30%,var(--teal-bright),var(--teal));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;box-shadow:0 0 26px -4px rgba(41,167,159,.9)}
+  .done h4{font-weight:700;font-size:1.4rem;color:var(--ink)}
+  .done p{font-family:var(--body);color:var(--ink-soft);font-size:.92rem;margin-top:8px;max-width:34ch;margin-inline:auto}
+
+
+  /* ---- resources (deep teal + glow) ---- */
+  .resources{background:linear-gradient(160deg,var(--teal-deep),var(--teal-deeper));color:#fff}
+  .resources .orb.a{width:280px;height:280px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-80px;left:-50px;opacity:.4}
+  .resources .orb.b{width:240px;height:240px;background:radial-gradient(circle,var(--violet),transparent 65%);bottom:-90px;right:-40px;opacity:.4}
+  .resources .wrap{position:relative;z-index:2}
+  .resources .sec-head h2{color:#fff}
+  .resources .sec-head .eyebrow{color:var(--yellow)}
+  .res-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .res{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    border-radius:14px;padding:16px 18px;color:#fff;text-decoration:none;transition:.15s}
+  .res:hover{background:rgba(255,255,255,.12);border-color:var(--yellow);box-shadow:0 0 26px -10px rgba(253,204,17,.7)}
+  .res .ri{font-size:1.3rem}
+  .res b{display:block;font-family:var(--display);font-size:.96rem}
+  .res span{font-family:var(--body);font-size:.8rem;color:rgba(255,255,255,.62)}
+
+  footer{background:var(--teal-deeper);color:rgba(255,255,255,.78);padding:38px 0 46px;border-top:1px solid rgba(255,255,255,.1)}
+  footer .wrap{display:flex;flex-direction:column;gap:18px}
+  @media(min-width:680px){ footer .wrap{flex-direction:row;justify-content:space-between;align-items:flex-end} }
+  footer p{font-family:var(--body)}
+  footer a{color:var(--yellow);text-decoration:none}
+  footer .socials{display:flex;gap:14px}
+  footer .socials a{color:rgba(255,255,255,.72)}
+  footer .socials a:hover{color:#fff}
+  footer .socials svg{width:20px;height:20px}
+  .foot-note{font-size:.78rem;color:rgba(255,255,255,.45)}
+
+  @media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important} }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <img src="OLLogo.png" alt="OpenLearning logo" class="brand-logo">
+    </div>
+    <div class="tag-chip"><span class="long">Join the conversation </span><b>#OpenlearningPilipinas</b></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <span class="orb a"></span><span class="orb b"></span><span class="orb c"></span>
+  <span class="spark" style="top:22%;left:14%"></span>
+  <span class="spark" style="top:68%;right:18%;animation-delay:1.2s"></span>
+  <span class="spark" style="top:40%;right:10%;animation-delay:2.1s"></span>
+  <span class="spark" style="bottom:14%;left:24%;animation-delay:.6s"></span>
+  <div class="wrap">
+    <span class="pill">OpenLearning Pilipinas 2026</span>
+    <h1>AI, Skills &amp; the <span class="y">Future of Learning</span></h1>
+    <p class="meta"><b>25 June &middot; 9 AM</b> &nbsp;·&nbsp; Glasshouse, New World Makati</p>
+    <div><span class="hashtag">#OpenlearningPilipinas</span></div>
+    <div class="cta"><a href="#qualify" class="btn btn-yellow">Find your next step &rarr;</a></div>
+  </div>
+</header>
+<hr class="sunline">
+
+<!-- RELIVE -->
+<section class="relive">
+  <span class="orb soft"></span>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Relive the day</p>
+      <h2>Share a moment from today</h2>
+      <p>Tag your photos with #OpenlearningPilipinas and they'll show up on the wall. Add yours below.</p>
+    </div>
+
+    <div class="share-row">
+      <a class="share-btn" id="shareLinkedIn" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.99H5.67v8.35h2.67zM7 8.82a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.52v-4.57c0-2.45-1.31-3.59-3.06-3.59-1.41 0-2.04.78-2.39 1.32v-1.13h-2.67v8.35h2.67v-4.66c0-.25 0-.5.07-.67.2-.49.65-1 1.4-1 .98 0 1.38.75 1.38 1.85v4.48h2.67z"/></svg>
+        Post on LinkedIn
+      </a>
+      <a class="share-btn" id="shareFB" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg>
+        Share on Facebook
+      </a>
+      <button class="share-btn" id="copyTag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copyLabel">Copy hashtag</span>
+      </button>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="gallery-scroll" id="galleryScroll">
+        <label class="tile add" for="photoInput">
+          <span class="plus">+</span>
+          <span>Add your photo</span>
+          <input type="file" id="photoInput" accept="image/*" hidden>
+        </label>
+      </div>
+      <div class="gallery-dotbar" id="galleryDotbar">
+        <button type="button" data-dot="0" class="active" aria-label="Jump to start"></button>
+        <button type="button" data-dot="1" aria-label="Middle photos"></button>
+        <button type="button" data-dot="2" class="next" aria-label="Next photos"></button>
+      </div>
+      <p class="gallery-hint">Swipe the photos, or tap the dots to browse →</p>
+      <button class="btn btn-teal viewall-btn" id="viewAllPhotosBtn" type="button">View all photos</button>
+    </div>
+
+    <div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
+      <div class="photo-grid-panel">
+        <div class="photo-grid-header">
+          <h3>All photos</h3>
+          <button class="close" id="photoGridClose" aria-label="Close">×</button>
+        </div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+    </div>
+
+    <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+      <div class="lightbox-panel">
+        <button class="close" id="photoLightboxClose" aria-label="Close">×</button>
+        <div class="lightbox-img" id="lightboxImageWrapper"></div>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-head">
+        <span class="ta-icon">💡</span>
+        <div>
+          <h3>One skill I'm taking home&hellip;</h3>
+          <p class="count"><b id="taCount">0</b> people have shared a takeaway today</p>
+        </div>
+      </div>
+      <div class="ta-form">
+        <div class="ta-field">
+          <label for="taName">First name</label>
+          <input type="text" id="taName" placeholder="Your name" maxlength="24">
+        </div>
+        <div class="ta-field">
+          <label for="taText">Your takeaway</label>
+          <input type="text" id="taText" placeholder="e.g. Designing AI-ready curricular" maxlength="60">
+          <span class="ta-counter" id="taCounter">60 characters left</span>
+        </div>
+        <div class="ta-field">
+          <label class="spacer" aria-hidden="true">Add</label>
+          <button class="btn btn-ink" id="taAdd">Add to wall</button>
+        </div>
+      </div>
+      <div class="ta-wall" id="taWall"></div>
+    </div>
+  </div>
+</section>
+<hr class="sunline">
+
+<!-- QUALIFIER -->
+<section class="qualify" id="qualify">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Your next step</p>
+      <h2>Contact &amp; demo request</h2>
+      <p>A couple minutes is all it takes — the right person at OpenLearning Pilipinas will follow up.</p>
+    </div>
+
+    <div class="qform-card" id="qualifyCard">
+
+      <p class="form-section-title">Contact information</p>
+      <div class="row2">
+        <div class="field">
+          <label>Full name <span class="req">*</span></label>
+          <input type="text" data-k="name" placeholder="Juan dela Cruz">
+        </div>
+        <div class="field">
+          <label>Work email <span class="req">*</span></label>
+          <input type="email" data-k="email" placeholder="you@organization.ph">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Mobile number <span class="req">*</span></label>
+          <input type="tel" data-k="mobile" placeholder="09xx xxx xxxx">
+        </div>
+        <div class="field">
+          <label>Job title / position <span class="req">*</span></label>
+          <input type="text" data-k="title" placeholder="e.g. Dean, Director, Faculty, HR Manager">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Institution / organization name <span class="req">*</span></label>
+          <input type="text" data-k="org" placeholder="Your organization">
+        </div>
+        <div class="field">
+          <label>Organization type <span class="req">*</span></label>
+          <select data-k="orgType">
+            <option value="">Select one&hellip;</option>
+            <option>Private University / College</option>
+            <option>Public University / College</option>
+            <option>K-12 School</option>
+            <option>TVET Institution</option>
+            <option>TAFE</option>
+            <option>Government Agency</option>
+            <option>Government-Linked Company</option>
+            <option>Training Provider</option>
+            <option>Large Enterprise</option>
+            <option>SME</option>
+            <option>NGO / Foundation</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Number of learners / students <span class="req">*</span></label>
+        <select data-k="learners">
+          <option value="">Select one&hellip;</option>
+          <option>0 &ndash; 250 learners</option>
+          <option>251 &ndash; 500 learners</option>
+          <option>501 &ndash; 1,000 learners</option>
+          <option>1,001 &ndash; 4,000 learners</option>
+          <option>4,000+ learners</option>
+          <option>Not Sure</option>
+        </select>
+      </div>
+
+      <p class="form-section-title">Learning technology</p>
+      <div class="row2">
+        <div class="field">
+          <label>Current LMS / learning platform</label>
+          <select data-k="lms">
+            <option value="">Select one&hellip;</option>
+            <option>Moodle</option>
+            <option>Canvas</option>
+            <option>Blackboard</option>
+            <option>Brightspace</option>
+            <option>Google Classroom</option>
+            <option>Microsoft Teams</option>
+            <option>OpenLearning</option>
+            <option>Proprietary / In-house LMS</option>
+            <option>No LMS Currently</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>When are you looking to implement or explore a solution?</label>
+          <select data-k="timeline">
+            <option value="">Select one&hellip;</option>
+            <option>Immediately</option>
+            <option>Within 3 Months</option>
+            <option>Within 6 Months</option>
+            <option>Within 12 Months</option>
+            <option>Just Exploring</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>I would like to: <span class="req">*</span></label>
+        <select data-k="intent">
+          <option value="">Select one&hellip;</option>
+          <option>Book a Demo / Learn More About OpenLearning</option>
+          <option>Explore Employability Advantage</option>
+          <option>Discuss Micro-Credentials</option>
+          <option>Explore AI for Learning &amp; Education</option>
+          <option>Partnership Opportunity</option>
+          <option>Government Collaboration</option>
+          <option>Workforce &amp; Professional Development</option>
+          <option>Existing Client Support</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>How can OpenLearning help your institution or organization? <span class="req">*</span></label>
+        <textarea data-k="goals" placeholder="Tell us about your goals, challenges, current initiatives, learner numbers, or the outcomes you're hoping to achieve."></textarea>
+      </div>
+
+      <div class="submit-row"><button class="btn btn-teal btn-block" id="qualifySubmit">Submit request</button></div>
+      <p class="form-note">By submitting this form, you consent to OpenLearning processing your information to respond to your request. For more information on how we handle personal data, please review our Privacy Policy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section class="resources">
+  <span class="orb a"></span><span class="orb b"></span>
+  <span class="spark" style="top:30%;right:22%;animation-delay:.4s"></span>
+  <span class="spark" style="bottom:24%;left:16%;animation-delay:1.6s"></span>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Take it with you</p>
+      <h2>Today's resources</h2>
+    </div>
+    <div class="res-grid">
+      <a class="res" href="#" target="_blank" rel="noopener"><span class="ri">&#128196;</span><span><b>Session slides</b><span>Decks from every talk</span></span></a>
+      <a class="res" href="#" target="_blank" rel="noopener"><span class="ri">&#128218;</span><span><b>Future-skills report</b><span>PH 2026 outlook (PDF)</span></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand on-dark">
+        <img src="OLLogo.png" alt="OpenLearning logo" class="brand-logo">
+      </div>
+      <p style="margin-top:10px;max-width:38ch;font-size:.9rem">Thanks for being part of OpenLearning Pilipinas 2026. Reach us anytime at <a href="mailto:hello@openlearning.com">hello@openlearning.com</a> or <a href="https://solutions.openlearning.com" target="_blank" rel="noopener">solutions.openlearning.com</a>.</p>
+      <p class="foot-note" style="margin-top:14px">&copy; 2026 OpenLearning &middot; #OpenlearningPilipinas</p>
+    </div>
+    <div class="socials">
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.99H5.67v8.35h2.67zM7 8.82a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.52v-4.57c0-2.45-1.31-3.59-3.06-3.59-1.41 0-2.04.78-2.39 1.32v-1.13h-2.67v8.35h2.67v-4.66c0-.25 0-.5.07-.67.2-.49.65-1 1.4-1 .98 0 1.38.75 1.38 1.85v4.48h2.67z"/></svg></a>
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var HASHTAG = "#OpenlearningPilipinas";
+  var PAGE_URL = "https://pilipinas.openlearning.com"; // placeholder — swap for your live URL
+
+  var url = encodeURIComponent(PAGE_URL);
+  var li = document.getElementById('shareLinkedIn');
+  var fb = document.getElementById('shareFB');
+  if(li) li.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + url;
+  if(fb) fb.href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+
+  var copyBtn = document.getElementById('copyTag');
+  var copyLabel = document.getElementById('copyLabel');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var done = function(){ copyLabel.textContent = "Copied!"; setTimeout(function(){copyLabel.textContent="Copy hashtag";},1600); };
+      if(navigator.clipboard){ navigator.clipboard.writeText(HASHTAG).then(done).catch(done); } else { done(); }
+    });
+  }
+
+  /* ---------------- GALLERY: scroll strip + 3-dot bar ---------------- */
+  var photoInput = document.getElementById('photoInput');
+  var galleryScroll = document.getElementById('galleryScroll');
+  var dotButtons = Array.prototype.slice.call(document.querySelectorAll('#galleryDotbar [data-dot]'));
+  var lightbox = document.getElementById('photoLightbox');
+  var lightboxImageWrapper = document.getElementById('lightboxImageWrapper');
+  var lightboxCaption = document.getElementById('lightboxCaption');
+  var lightboxClose = document.getElementById('photoLightboxClose');
+
+  function maxScrollLeft(){
+    return Math.max(0, galleryScroll.scrollWidth - galleryScroll.clientWidth);
+  }
+
+  function updateDots(){
+    if(!galleryScroll) return;
+    var max = maxScrollLeft();
+    var ratio = max <= 0 ? 0 : galleryScroll.scrollLeft / max;
+    var active = ratio < 0.34 ? 0 : ratio < 0.67 ? 1 : 2;
+    dotButtons.forEach(function(d,i){ d.classList.toggle('active', i === active); });
+    var nextBtn = dotButtons[2];
+    if(nextBtn) nextBtn.disabled = max <= 0 || galleryScroll.scrollLeft >= max - 2;
+  }
+
+  function attachDotHandlers(){
+    if(dotButtons[0]) dotButtons[0].addEventListener('click', function(){
+      galleryScroll.scrollTo({left:0, behavior:'smooth'});
+    });
+    if(dotButtons[1]) dotButtons[1].addEventListener('click', function(){
+      galleryScroll.scrollTo({left:maxScrollLeft()/2, behavior:'smooth'});
+    });
+    if(dotButtons[2]) dotButtons[2].addEventListener('click', function(){
+      var max = maxScrollLeft();
+      var next = Math.min(max, galleryScroll.scrollLeft + galleryScroll.clientWidth);
+      galleryScroll.scrollTo({left:next, behavior:'smooth'});
+    });
+  }
+
+  function openLightbox(tile){
+    if(!lightbox) return;
+    lightboxImageWrapper.innerHTML = '';
+    var img = tile.querySelector('img');
+    if(img){
+      var clone = img.cloneNode();
+      clone.alt = img.alt || 'Shared photo';
+      lightboxImageWrapper.appendChild(clone);
+      lightboxCaption.textContent = img.alt || 'Shared photo';
+    } else {
+      var caption = document.createElement('div');
+      caption.className = 'lightbox-text';
+      caption.textContent = tile.textContent.trim();
+      lightboxImageWrapper.appendChild(caption);
+      lightboxCaption.textContent = tile.textContent.trim();
+    }
+    lightbox.classList.add('active');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  }
+
+  function closeLightbox(){
+    if(!lightbox) return;
+    lightbox.classList.remove('active');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImageWrapper.innerHTML = '';
+    document.body.classList.remove('no-scroll');
+  }
+
+  function attachTileClicks(){
+    Array.prototype.slice.call(galleryScroll.querySelectorAll('.tile:not(.add)')).forEach(function(tile){
+      tile.removeEventListener('click', tile._clickHandler);
+      tile._clickHandler = function(){ openLightbox(tile); };
+      tile.addEventListener('click', tile._clickHandler);
+    });
+  }
+
+  if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if(lightbox) lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeLightbox(); closePhotoGrid(); } });
+
+  /* ---------------- VIEW ALL PHOTOS: scrollable phone-style grid ---------------- */
+  var viewAllBtn = document.getElementById('viewAllPhotosBtn');
+  var photoGridModal = document.getElementById('photoGridModal');
+  var photoGrid = document.getElementById('photoGrid');
+  var photoGridClose = document.getElementById('photoGridClose');
+
+  function openPhotoGrid(){
+    if(!photoGridModal || !photoGrid) return;
+    photoGrid.innerHTML = '';
+    var tiles = Array.prototype.slice.call(galleryScroll.querySelectorAll('.tile:not(.add)'));
+    tiles.forEach(function(t){
+      var img = t.querySelector('img');
+      if(!img) return;
+      var gTile = document.createElement('div');
+      gTile.className = 'grid-tile';
+      var gImg = document.createElement('img');
+      gImg.src = img.src;
+      gImg.alt = img.alt || 'Shared photo';
+      gTile.appendChild(gImg);
+      gTile.addEventListener('click', function(){ openLightbox(gTile); });
+      photoGrid.appendChild(gTile);
+    });
+    photoGridModal.classList.add('active');
+    photoGridModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  }
+
+  function closePhotoGrid(){
+    if(!photoGridModal) return;
+    photoGridModal.classList.remove('active');
+    photoGridModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  if(viewAllBtn) viewAllBtn.addEventListener('click', openPhotoGrid);
+  if(photoGridClose) photoGridClose.addEventListener('click', closePhotoGrid);
+  if(photoGridModal) photoGridModal.addEventListener('click', function(e){ if(e.target === photoGridModal) closePhotoGrid(); });
+
+  if(galleryScroll){
+    galleryScroll.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); });
+    attachDotHandlers();
+    attachTileClicks();
+    updateDots();
+    window.addEventListener('resize', function(){ updateDots(); });
+  }
+
+  function renderPhotoTile(url, insertAfterAdd){
+    var tile = document.createElement('div');
+    tile.className = 'tile';
+    var img = document.createElement('img');
+    img.src = url;
+    img.alt = "Shared photo";
+    tile.appendChild(img);
+    if(insertAfterAdd){
+      var addTile = galleryScroll.querySelector('.tile.add');
+      addTile.insertAdjacentElement('afterend', tile);
+    } else {
+      galleryScroll.appendChild(tile);
+    }
+    return tile;
+  }
+
+  function loadExistingPhotos(){
+    fetch('/api/get-photos')
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if(!result || !result.photos || !result.photos.length) return;
+        // API returns oldest-first; inserting each one "after the add tile" in that
+        // order means the last one inserted (the newest) ends up right after Add —
+        // same stacking behavior as a brand-new live upload.
+        result.photos.forEach(function(p){
+          renderPhotoTile(p.url, true);
+        });
+        attachTileClicks();
+        updateDots();
+      })
+      .catch(function(err){ console.error('Loading photos failed:', err); });
+  }
+  loadExistingPhotos();
+
+  if(photoInput){
+    photoInput.addEventListener('change', function(e){
+      var file = e.target.files && e.target.files[0];
+      if(!file) return;
+
+      // Show the photo immediately using a local preview while it uploads
+      var tile = renderPhotoTile(URL.createObjectURL(file), true);
+      var img = tile.querySelector('img');
+      attachTileClicks();
+      updateDots();
+
+      // Upload to Vercel Blob so the photo is shared with every visitor, not just this browser
+      fetch('/api/upload-photo', {
+        method: 'POST',
+        headers: {
+          'content-type': file.type || 'application/octet-stream',
+          'x-filename': encodeURIComponent(file.name || 'photo.jpg')
+        },
+        body: file
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(result){
+          if(result && result.url){
+            img.src = result.url; // swap local preview for the real shared URL
+          }
+        })
+        .catch(function(err){ console.error('Photo upload failed:', err); });
+
+      photoInput.value = '';
+    });
+  }
+
+  /* ---------------- TAKEAWAY WALL ---------------- */
+  var taAdd = document.getElementById('taAdd');
+  var taName = document.getElementById('taName');
+  var taText = document.getElementById('taText');
+  var taCounter = document.getElementById('taCounter');
+  var taWall = document.getElementById('taWall');
+  var taCount = document.getElementById('taCount');
+
+  function updateCounter(){
+    if(!taCounter || !taText) return;
+    var left = 60 - taText.value.length;
+    taCounter.textContent = left + (left === 1 ? ' character left' : ' characters left');
+  }
+  if(taText) taText.addEventListener('input', updateCounter);
+  updateCounter();
+
+  function updateTaCount(){
+    if(!taCount || !taWall) return;
+    taCount.textContent = taWall.querySelectorAll('.ta-pill').length;
+  }
+  updateTaCount();
+
+  function renderTakeawayPill(n, t, prepend){
+    var pill = document.createElement('span');
+    pill.className = 'ta-pill';
+    pill.innerHTML = '<span class="ta-avatar"></span><span class="who"></span> · <span class="msg"></span>';
+    pill.querySelector('.ta-avatar').textContent = (n||'G').charAt(0).toUpperCase();
+    pill.querySelector('.who').textContent = n;
+    pill.querySelector('.msg').textContent = t;
+    if(prepend){ taWall.insertBefore(pill, taWall.firstChild); }
+    else { taWall.appendChild(pill); }
+  }
+
+  function loadExistingTakeaways(){
+    fetch('/api/get-takeaways')
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if(!result || !result.takeaways || !result.takeaways.length) return;
+        taWall.innerHTML = ''; // clear the hardcoded sample pills
+        // oldest first, each prepended -> newest ends up on top, same as live adds
+        result.takeaways.forEach(function(item){
+          renderTakeawayPill(item.name, item.takeaway, true);
+        });
+        updateTaCount();
+      })
+      .catch(function(err){ console.error('Loading takeaways failed:', err); });
+  }
+  loadExistingTakeaways();
+
+  function addTakeaway(){
+    var n = (taName.value||"").trim() || "Guest";
+    var t = (taText.value||"").trim();
+    if(!t){ taText.focus(); return; }
+    renderTakeawayPill(n, t, true);
+    updateTaCount();
+
+    fetch('/api/submit-takeaway', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: n, takeaway: t })
+    }).catch(function(err){ console.error('Takeaway submit failed:', err); });
+
+    taName.value=''; taText.value=''; updateCounter(); taText.focus();
+  }
+  if(taAdd) taAdd.addEventListener('click', addTakeaway);
+  if(taText) taText.addEventListener('keydown', function(e){ if(e.key==='Enter') addTakeaway(); });
+
+  /* ---------------- QUALIFIER: contact & demo request form ---------------- */
+  document.querySelectorAll('.chips .chip').forEach(function(chip){
+    chip.addEventListener('click', function(){ chip.classList.toggle('on'); });
+  });
+
+  var qualifyCard = document.getElementById('qualifyCard');
+  var submitBtn = document.getElementById('qualifySubmit');
+  var REQUIRED_KEYS = ['name','email','mobile','title','org','orgType','learners','intent','goals'];
+
+  function collectQualify(){
+    var data = {};
+    qualifyCard.querySelectorAll('[data-k]').forEach(function(el){
+      data[el.getAttribute('data-k')] = el.value.trim();
+    });
+    qualifyCard.querySelectorAll('[data-chips]').forEach(function(group){
+      var key = group.getAttribute('data-chips');
+      data[key] = Array.prototype.map.call(group.querySelectorAll('.chip.on'), function(c){ return c.textContent.trim(); });
+    });
+    qualifyCard.querySelectorAll('[data-radio]').forEach(function(group){
+      var key = group.getAttribute('data-radio');
+      var checked = group.querySelector('input:checked');
+      data[key] = checked ? checked.value : '';
+    });
+    return data;
+  }
+
+  if(submitBtn){
+    submitBtn.addEventListener('click', function(){
+      var data = collectQualify();
+      for(var i=0;i<REQUIRED_KEYS.length;i++){
+        var key = REQUIRED_KEYS[i];
+        if(!data[key]){
+          var el = qualifyCard.querySelector('[data-k="'+key+'"]');
+          if(el) el.focus();
+          return;
+        }
+      }
+      if(data.email.indexOf('@') < 0){
+        qualifyCard.querySelector('[data-k="email"]').focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .catch(function(err){ console.error('Lead submit failed:', err); })
+        .finally(function(){
+          var first = data.name.split(' ')[0];
+          var done = document.createElement('div');
+          done.className = 'done';
+          done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p>';
+          done.querySelector('h4').textContent = "You're on the list!";
+          done.querySelector('p').textContent = "Thanks, " + first + " — the OpenLearning Pilipinas team will review your request and reach out shortly.";
+          qualifyCard.replaceWith(done);
+        });
+    });
+  }
+})();
+</script>
+</body>
+</html>

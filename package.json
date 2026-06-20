@@ -1,0 +1,6 @@
+{
+  "name": "openlearning-pilipinas-2026",
+  "dependencies": {
+    "@vercel/blob": "^2.4.1"
+  }
+}
