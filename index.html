@@ -163,7 +163,8 @@
     padding-bottom:max(16px, env(safe-area-inset-bottom));
     background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
   .photo-grid-modal.active{display:flex}
-  .photo-grid-panel{position:relative;width:100%;max-width:720px;height:min(80dvh,640px);max-height:calc(100dvh - 32px);
+  .photo-grid-panel{position:relative;width:100%;max-width:720px;
+    max-height:min(80dvh, calc(100dvh - 32px));
     overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
     display:flex;flex-direction:column}
   .photo-grid-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
@@ -172,7 +173,7 @@
   .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
     background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none}
   .photo-grid-header .close:hover{background:var(--line)}
-  .photo-grid{flex:1 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;
+  .photo-grid{flex:0 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
     -webkit-overflow-scrolling:touch}
   @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
   .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
