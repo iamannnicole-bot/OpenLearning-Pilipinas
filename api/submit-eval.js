@@ -87,7 +87,7 @@ const FIELD_MAP = {
   valuableSession:  "entry.1812843657",
   takeaway:         "entry.1186003422",
   relevance:        "entry.2104539433",
-  interests:        "entry.1502755867",   // multi-value, repeated key
+  interests:        "entry.1502755867",
   challenge:        "entry.1664234364",
   attendFuture:     "entry.577195242",
   comments:         "entry.791289815",
