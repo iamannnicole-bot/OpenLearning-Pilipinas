@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>OpenLearning Pilipinas 2026 · AI, Skills & the Future of Learning</title>
+<title>OpenLearning Pilipinas 2026 · Share, Reflect & Get Your Certificate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -51,8 +51,6 @@
   .brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;min-width:0}
   .brand-logo{height:34px;width:auto;display:block}
   .brand-logo-big{height:82px;width:auto;display:block}
-  .ring{width:24px;height:24px;flex:none;position:relative}
-  .ring svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(70,214,200,.7))}
   .brand .lo{color:var(--teal);white-space:nowrap}
   .brand.on-dark .lo{color:#fff}
 
@@ -75,19 +73,26 @@
   .hero .orb.a{width:360px;height:360px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-90px;right:-60px;opacity:.5}
   .hero .orb.b{width:300px;height:300px;background:radial-gradient(circle,var(--violet),transparent 65%);bottom:-110px;left:-70px;opacity:.42}
   .hero .orb.c{width:220px;height:220px;background:radial-gradient(circle,var(--cyan),transparent 60%);bottom:6%;right:8%;opacity:.4}
-  .hero .wrap{position:relative;z-index:2;padding-top:40px;padding-bottom:52px}
-  .hero-brand{justify-content:center;margin-bottom:24px}
+  .hero .wrap{position:relative;z-index:2;padding-top:40px;padding-bottom:46px}
   .pill{display:inline-block;font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.08em;
     color:#fff;background:rgba(70,214,200,.18);border:1px solid rgba(70,214,200,.5);
     padding:7px 16px;border-radius:999px;box-shadow:0 0 22px -4px rgba(70,214,200,.6);text-transform:uppercase}
-  .hero h1{font-weight:800;font-size:clamp(2.3rem,9.5vw,4.6rem);margin:18px auto 0;max-width:14ch}
+  .hero h1{font-weight:800;font-size:clamp(2.1rem,8.5vw,4rem);margin:18px auto 0;max-width:15ch}
   .hero h1 .y{color:var(--yellow);text-shadow:0 0 26px rgba(253,204,17,.45)}
-  .hero .meta{margin-top:16px;font-size:.96rem;color:rgba(255,255,255,.82);font-weight:500;padding:0 8px}
+  .hero .meta{margin-top:14px;font-size:.96rem;color:rgba(255,255,255,.82);font-weight:500;padding:0 8px}
   .hero .meta b{color:#fff;font-weight:700}
-  .hashtag{display:inline-block;margin-top:22px;font-family:var(--display);font-weight:700;font-size:.92rem;
-    color:var(--ink);background:var(--yellow);padding:8px 16px;border-radius:999px;
-    box-shadow:0 0 30px -4px rgba(253,204,17,.8)}
+  .hero .lede{margin-top:14px;font-family:var(--body);font-size:1rem;color:rgba(255,255,255,.9);max-width:40ch;margin-inline:auto}
   .hero .cta{margin-top:22px}
+
+  /* ---- step strip (under hero) ---- */
+  .stepstrip{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
+  .stepstrip a{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;
+    padding:8px 16px 8px 8px;color:#fff;font-family:var(--display);font-weight:600;font-size:.86rem;transition:.15s}
+  .stepstrip a:hover{background:rgba(255,255,255,.16);border-color:var(--yellow)}
+  .stepstrip .n{width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    font-family:var(--display);font-weight:800;font-size:.82rem;color:var(--ink);background:var(--yellow)}
+  .hero .timehint{margin-top:16px;font-family:var(--body);font-size:.82rem;color:rgba(255,255,255,.7)}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:700;
     font-size:1rem;cursor:pointer;border:none;border-radius:999px;padding:14px 28px;text-decoration:none;
@@ -99,24 +104,30 @@
   .btn-teal:hover{background:#22938c;box-shadow:0 0 34px -4px rgba(41,167,159,1)}
   .btn-ink{background:var(--ink);color:#fff}
   .btn-ink:hover{background:#0a3a4f}
-  .btn-violet{background:var(--violet);color:#fff;box-shadow:0 0 24px -8px rgba(138,123,255,.9)}
-  .btn-violet:hover{background:#7a6aff}
   .btn-block{display:flex;width:100%}
 
   .sunline{height:3px;border:0;margin:0;background:linear-gradient(90deg,transparent,var(--teal-bright),var(--yellow),var(--teal-bright),transparent);
     box-shadow:0 0 16px rgba(70,214,200,.5)}
 
-  section{padding:50px 0;position:relative;overflow:hidden}
-  @media(min-width:680px){ section{padding:58px 0} }
-  .sec-head{margin-bottom:24px;position:relative;z-index:2}
-  .sec-head .eyebrow{color:var(--teal);margin-bottom:10px}
-  .sec-head h2{font-weight:800;font-size:clamp(1.7rem,6.5vw,2.7rem);color:var(--ink)}
-  .sec-head p{font-family:var(--body);color:var(--ink-soft);margin-top:10px;max-width:48ch}
+  section{padding:48px 0;position:relative;overflow:hidden}
+  @media(min-width:680px){ section{padding:56px 0} }
 
-  /* ---- relive ---- */
-  .relive{background:var(--paper)}
-  .relive .orb.soft{width:300px;height:300px;background:radial-gradient(circle,var(--teal),transparent 70%);opacity:.1;top:-80px;right:-60px}
-  .relive .wrap{position:relative;z-index:2}
+  /* ---- step header (numbered, guided) ---- */
+  .step-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px;position:relative;z-index:2}
+  .step-num{flex:none;width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--display);font-weight:800;font-size:1.25rem;color:#fff;
+    background:linear-gradient(135deg,var(--teal),var(--teal-bright));box-shadow:0 0 22px -6px rgba(41,167,159,.8)}
+  .step-head .eyebrow{color:var(--teal);margin-bottom:6px}
+  .step-head h2{font-weight:800;font-size:clamp(1.55rem,6vw,2.4rem);color:var(--ink)}
+  .step-head p{font-family:var(--body);color:var(--ink-soft);margin-top:8px;max-width:50ch}
+  .resources .step-head .eyebrow{color:var(--yellow)}
+  .resources .step-head h2{color:#fff}
+  .resources .step-num{background:linear-gradient(135deg,var(--yellow),#ffe27a);color:var(--ink)}
+
+  /* ---- photos ---- */
+  .photos{background:var(--paper)}
+  .photos .orb.soft{width:300px;height:300px;background:radial-gradient(circle,var(--teal),transparent 70%);opacity:.1;top:-80px;right:-60px}
+  .photos .wrap{position:relative;z-index:2}
   .share-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
   .share-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-size:.88rem;font-weight:600;
     color:var(--ink);background:var(--mist);border:1px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;text-decoration:none;transition:.15s}
@@ -140,8 +151,6 @@
     font-family:var(--display);font-size:.74rem;font-weight:600;text-align:center;padding:8px;cursor:pointer;transition:transform .18s ease}
   .tile:hover{transform:translateY(-2px)}
   .tile img{width:100%;height:100%;object-fit:cover}
-  .tile.t2{background:linear-gradient(135deg,var(--teal),var(--teal-bright))}
-  .tile.t3{background:linear-gradient(135deg,var(--violet),var(--teal-deep))}
   .tile.add{background:#fff;border:2px dashed var(--line);color:var(--ink-soft);cursor:pointer;flex-direction:column;gap:6px;transition:.15s}
   .tile.add .plus{font-size:1.7rem;font-weight:300;line-height:1}
   .tile.add:hover{border-color:var(--teal);color:var(--teal);box-shadow:0 0 22px -8px rgba(41,167,159,.6)}
@@ -149,7 +158,7 @@
   .gallery-dotbar{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:18px}
   .gallery-dotbar button{width:11px;height:11px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;
     transition:.18s;position:relative}
-  .gallery-dotbar button::after{content:"";position:absolute;inset:-13px}/* bigger tap target */
+  .gallery-dotbar button::after{content:"";position:absolute;inset:-13px}
   .gallery-dotbar button.active{background:var(--teal);box-shadow:0 0 0 5px rgba(41,167,159,.14);transform:scale(1.15)}
   .gallery-dotbar button.next{background:var(--ink-soft)}
   .gallery-dotbar button.next.active{background:var(--teal)}
@@ -196,7 +205,9 @@
   .photo-lightbox button.close:hover{background:rgba(255,255,255,.26)}
 
   /* ---- takeaway ---- */
-  .takeaway{margin-top:30px;background:linear-gradient(180deg,#fff,var(--mist-tint));border-radius:var(--radius);
+  .takeaway-section{background:linear-gradient(180deg,var(--mist),var(--mist-tint))}
+  .takeaway-section .wrap{position:relative;z-index:2}
+  .takeaway{background:linear-gradient(180deg,#fff,var(--mist-tint));border-radius:var(--radius);
     padding:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
   @media(min-width:560px){ .takeaway{padding:26px} }
   .takeaway-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
@@ -224,17 +235,43 @@
   .ta-pill .who{color:var(--teal);font-weight:700}
   @keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 
-  /* ---- qualifier: unified form ---- */
-  .qualify{background:linear-gradient(180deg,var(--mist),var(--mist-tint))}
+  /* ---- evaluation form ---- */
+  .evaluate{background:var(--paper)}
   .qform-card{position:relative;z-index:2;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
     box-shadow:var(--shadow);padding:22px;max-width:760px;margin:0 auto}
   @media(min-width:560px){ .qform-card{padding:30px} }
 
+  .cert-note{display:flex;gap:13px;align-items:flex-start;
+    background:linear-gradient(135deg,rgba(253,204,17,.16),rgba(70,214,200,.12));
+    border:1px solid var(--line);border-radius:14px;padding:15px 17px;margin-bottom:22px}
+  .cert-note .ci{font-size:1.4rem;flex:none;line-height:1.2}
+  .cert-note p{font-family:var(--body);font-size:.88rem;color:var(--ink);margin:0}
+  .cert-note b{color:var(--teal-deep)}
+
+  /* ---- shared field styles (used by both eval and lead forms) ---- */
   .field{margin-top:16px}
   .qform-card .field:first-child{margin-top:0}
-  .field label{display:block;font-family:var(--display);font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:6px}
-  .field input,.field select,.field textarea{width:100%;font-family:var(--body);font-size:.95rem;color:var(--ink);
-    border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+  .field label{
+    display:block;
+    font-family:var(--display);
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .field .hint{font-family:var(--body);font-weight:400;font-size:.78rem;color:var(--ink-soft);display:block;margin-top:2px}
+  .field input,
+  .field select,
+  .field textarea{
+    width:100%;
+    font-family:var(--body);
+    font-size:.95rem;
+    color:var(--ink);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    background:#fff;
+  }
   .field select{
     appearance:none;-webkit-appearance:none;-moz-appearance:none;
     padding-right:42px;
@@ -248,43 +285,78 @@
   .row2{display:grid;gap:12px}
   @media(min-width:480px){
     .row2{grid-template-columns:1fr 1fr;align-items:end}
-    .row2 .field{margin-top:0}
-    .row2 .field label{min-height:2.7em;display:flex;align-items:flex-end}
+    .row2 .field{margin-top:0;display:flex;flex-direction:column}
+    .row2 .field label{flex:1}
+    .row2 .field input,.row2 .field select{margin-top:auto}
+    .row2-top{align-items:start}
+    .row2-top .field label{flex:none}
+    .row2-top .field input{margin-top:0}
   }
 
+  /* form section divider title */
+  .form-section-title{
+    font-family:var(--display);
+    font-size:.74rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--teal);
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px dashed var(--line);
+  }
+
+  /* star rating */
+  .stars{display:flex;gap:8px;margin-top:6px}
+  .star{font-size:1.9rem;line-height:1;cursor:pointer;color:var(--line);background:none;border:none;padding:0;transition:.12s;-webkit-tap-highlight-color:transparent}
+  .star:hover{transform:scale(1.12)}
+  .star.on{color:var(--yellow);text-shadow:0 0 12px rgba(253,204,17,.65)}
+  .rating-label{font-family:var(--body);font-size:.82rem;color:var(--ink-soft);margin-top:6px;min-height:1.1em}
+
+  /* interest chips */
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
   .chip{font-family:var(--body);font-size:.85rem;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);
     border-radius:999px;padding:8px 14px;cursor:pointer;transition:.12s;user-select:none}
   .chip:hover{border-color:var(--teal)}
   .chip.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 0 18px -6px rgba(41,167,159,.8)}
 
-  .form-section-title{font-family:var(--display);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-    color:var(--teal);margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
-  .qform-card .form-section-title:first-child{margin-top:0;padding-top:0;border-top:none}
-  .req{color:var(--teal);font-weight:700}
-
-  .radio-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:11px 0}
+  .radio-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:6px 0}
   .radio-opt{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:.92rem;color:var(--ink);cursor:pointer}
   .radio-opt input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex:none}
 
+  .req{color:var(--teal);font-weight:700}
+
+  /* opt-in (collapsible) — now "Connect with OpenLearning" */
+  .optin{margin-top:26px;padding-top:22px;border-top:1px dashed var(--line)}
+  .optin-toggle{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
+    background:var(--mist-tint);border:1px solid var(--line);border-radius:14px;padding:15px 17px;transition:.15s;font-family:var(--body)}
+  .optin-toggle:hover{border-color:var(--teal);box-shadow:0 0 20px -10px rgba(41,167,159,.5)}
+  .optin-toggle .ot-ico{flex:none;font-size:1.25rem}
+  .optin-toggle .ot-copy{flex:1;min-width:0}
+  .optin-toggle .ot-copy b{display:block;font-family:var(--display);font-weight:700;font-size:.98rem;color:var(--ink)}
+  .optin-toggle .ot-copy span{font-size:.8rem;color:var(--ink-soft)}
+  .optin-toggle .ot-chev{flex:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+    color:var(--teal);transition:transform .2s ease}
+  .optin-toggle[aria-expanded="true"] .ot-chev{transform:rotate(180deg)}
+  .optin-fields{display:none;margin-top:16px;animation:slidein .3s ease}
+  .optin-fields.open{display:block}
+
   @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-  .submit-row{margin-top:22px}
+  .submit-row{margin-top:24px}
   .form-note{font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:12px;text-align:center}
   .done{text-align:center;padding:30px 6px;animation:slidein .3s ease}
   .done .mark{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 35% 30%,var(--teal-bright),var(--teal));
     display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;box-shadow:0 0 26px -4px rgba(41,167,159,.9)}
   .done h4{font-weight:700;font-size:1.4rem;color:var(--ink)}
-  .done p{font-family:var(--body);color:var(--ink-soft);font-size:.92rem;margin-top:8px;max-width:34ch;margin-inline:auto}
-
+  .done p{font-family:var(--body);color:var(--ink-soft);font-size:.92rem;margin-top:8px;max-width:38ch;margin-inline:auto}
+  .done .sub{font-size:.82rem;margin-top:10px}
 
   /* ---- resources (deep teal + glow) ---- */
   .resources{background:linear-gradient(160deg,var(--teal-deep),var(--teal-deeper));color:#fff}
   .resources .orb.a{width:280px;height:280px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-80px;left:-50px;opacity:.4}
   .resources .orb.b{width:240px;height:240px;background:radial-gradient(circle,var(--violet),transparent 65%);bottom:-90px;right:-40px;opacity:.4}
   .resources .wrap{position:relative;z-index:2}
-  .resources .sec-head h2{color:#fff}
-  .resources .sec-head .eyebrow{color:var(--yellow)}
   .res-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
   .res{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
     border-radius:14px;padding:16px 18px;color:#fff;text-decoration:none;transition:.15s}
@@ -328,22 +400,30 @@
   <span class="spark" style="bottom:14%;left:24%;animation-delay:.6s"></span>
   <div class="wrap">
     <span class="pill">OpenLearning Pilipinas 2026</span>
-    <h1>AI, Skills &amp; the <span class="y">Future of Learning</span></h1>
-    <p class="meta"><b>25 June &middot; 9 AM</b> &nbsp;·&nbsp; Glasshouse, New World Makati</p>
-    <div><span class="hashtag">#OpenlearningPilipinas</span></div>
-    <div class="cta"><a href="#qualify" class="btn btn-yellow">Find your next step &rarr;</a></div>
+    <h1>Thank you for <span class="y">joining us today</span></h1>
+    <p class="lede">Three quick steps to wrap up your day — share a moment, leave one insight, and get your Certificate of Attendance.</p>
+    <div class="stepstrip">
+      <a href="#step1"><span class="n">1</span> Share photos</a>
+      <a href="#step2"><span class="n">2</span> One insight</a>
+      <a href="#step3"><span class="n">3</span> Get certificate</a>
+    </div>
+    <div class="cta"><a href="#step3" class="btn btn-yellow">Get your certificate &rarr;</a></div>
+    <p class="timehint">Takes about 2–3 minutes &middot; #OpenlearningPilipinas</p>
   </div>
 </header>
 <hr class="sunline">
 
-<!-- RELIVE -->
-<section class="relive">
+<!-- STEP 1 · SHARE PHOTOS -->
+<section class="photos" id="step1">
   <span class="orb soft"></span>
   <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Relive the day</p>
-      <h2>Share a moment from today</h2>
-      <p>Tag your photos with #OpenlearningPilipinas and they'll show up on the wall. Add yours below.</p>
+    <div class="step-head">
+      <span class="step-num">1</span>
+      <div>
+        <p class="eyebrow">Share photos</p>
+        <h2>Share a moment from today</h2>
+        <p>Upload your favourite snaps and tag them with <b>#OpenlearningPilipinas</b> — they'll appear on the wall for everyone to relive.</p>
+      </div>
     </div>
 
     <div class="share-row">
@@ -395,13 +475,28 @@
         <div class="lightbox-caption" id="lightboxCaption"></div>
       </div>
     </div>
+  </div>
+</section>
+<hr class="sunline">
+
+<!-- STEP 2 · SHARE ONE TAKEAWAY -->
+<section class="takeaway-section" id="step2">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <div>
+        <p class="eyebrow">One insight</p>
+        <h2>What is one insight you're taking home today?</h2>
+        <p>Sum it up in a sentence and add it to the wall — your words might spark someone else's next idea.</p>
+      </div>
+    </div>
 
     <div class="takeaway">
       <div class="takeaway-head">
         <span class="ta-icon">💡</span>
         <div>
-          <h3>One skill I'm taking home&hellip;</h3>
-          <p class="count"><b id="taCount">0</b> people have shared a takeaway today</p>
+          <h3>Add your insight to the wall</h3>
+          <p class="count"><b id="taCount">0</b> insights shared so far today</p>
         </div>
       </div>
       <div class="ta-form">
@@ -410,8 +505,8 @@
           <input type="text" id="taName" placeholder="Your name" maxlength="24">
         </div>
         <div class="ta-field">
-          <label for="taText">Your takeaway</label>
-          <input type="text" id="taText" placeholder="e.g. Designing AI-ready curricular" maxlength="60">
+          <label for="taText">Your insight</label>
+          <input type="text" id="taText" placeholder="e.g. Designing AI-ready curriculum" maxlength="60">
           <span class="ta-counter" id="taCounter">60 characters left</span>
         </div>
         <div class="ta-field">
@@ -425,130 +520,236 @@
 </section>
 <hr class="sunline">
 
-<!-- QUALIFIER -->
-<section class="qualify" id="qualify">
+<!-- STEP 3 · EVALUATION + CERTIFICATE -->
+<section class="evaluate" id="step3">
   <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Your next step</p>
-      <h2>Contact &amp; demo request</h2>
-      <p>A couple minutes is all it takes — the right person at OpenLearning Pilipinas will follow up.</p>
+    <div class="step-head">
+      <span class="step-num">3</span>
+      <div>
+        <p class="eyebrow">Evaluation &amp; certificate</p>
+        <h2>Event evaluation</h2>
+        <p>Your feedback helps us make the next one even better.</p>
+      </div>
     </div>
 
     <div class="qform-card" id="qualifyCard">
 
-      <p class="form-section-title">Contact information</p>
-      <div class="row2">
+      <div class="cert-note">
+        <span class="ci">🎓</span>
+        <p>Please complete this form to receive your <b>Certificate of Attendance</b>. Certificates will be sent to the email address you provide below.</p>
+      </div>
+
+      <!-- ── Contact details ─────────────────────────────────────── -->
+      <div class="row2 row2-top">
         <div class="field">
           <label>Full name <span class="req">*</span></label>
           <input type="text" data-k="name" placeholder="Juan dela Cruz">
         </div>
         <div class="field">
-          <label>Work email <span class="req">*</span></label>
-          <input type="email" data-k="email" placeholder="you@organization.ph">
+          <label>Email address <span class="req">*</span></label>
+          <input type="email" data-k="email" placeholder="you@email.com">
+          <span class="hint">Your certificate will be sent here.</span>
         </div>
       </div>
-      <div class="row2">
-        <div class="field">
-          <label>Mobile number <span class="req">*</span></label>
-          <input type="tel" data-k="mobile" placeholder="09xx xxx xxxx">
-        </div>
-        <div class="field">
-          <label>Job title / position <span class="req">*</span></label>
-          <input type="text" data-k="title" placeholder="e.g. Dean, Director, Faculty, HR Manager">
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Institution / organization name <span class="req">*</span></label>
-          <input type="text" data-k="org" placeholder="Your organization">
-        </div>
-        <div class="field">
-          <label>Organization type <span class="req">*</span></label>
-          <select data-k="orgType">
-            <option value="">Select one&hellip;</option>
-            <option>Private University / College</option>
-            <option>Public University / College</option>
-            <option>K-12 School</option>
-            <option>TVET Institution</option>
-            <option>TAFE</option>
-            <option>Government Agency</option>
-            <option>Government-Linked Company</option>
-            <option>Training Provider</option>
-            <option>Large Enterprise</option>
-            <option>SME</option>
-            <option>NGO / Foundation</option>
-            <option>Other</option>
-          </select>
-        </div>
-      </div>
+
+      <!-- ── Event feedback ──────────────────────────────────────── -->
+      <p class="form-section-title" style="margin-top:22px;padding-top:18px">Event feedback</p>
+
       <div class="field">
-        <label>Number of learners / students <span class="req">*</span></label>
-        <select data-k="learners">
+        <label>How would you rate the event overall? <span class="req">*</span></label>
+        <div class="stars" id="ratingStars" role="radiogroup" aria-label="Rate the event from 1 to 5 stars">
+          <button type="button" class="star" data-val="1" aria-label="1 star">&#9733;</button>
+          <button type="button" class="star" data-val="2" aria-label="2 stars">&#9733;</button>
+          <button type="button" class="star" data-val="3" aria-label="3 stars">&#9733;</button>
+          <button type="button" class="star" data-val="4" aria-label="4 stars">&#9733;</button>
+          <button type="button" class="star" data-val="5" aria-label="5 stars">&#9733;</button>
+        </div>
+        <span class="rating-label" id="ratingLabel"></span>
+        <input type="hidden" data-k="rating" value="">
+      </div>
+
+      <div class="field">
+        <label>Most valuable session or discussion</label>
+        <input type="text" data-k="valuableSession" placeholder="Which talk or conversation stood out to you?">
+      </div>
+
+      <div class="field">
+        <label>Your biggest takeaway from the event</label>
+        <textarea data-k="takeaway" placeholder="The one idea you'll act on first."></textarea>
+      </div>
+
+      <div class="field">
+        <label>How relevant was this event to your institution's needs?</label>
+        <select data-k="relevance">
           <option value="">Select one&hellip;</option>
-          <option>0 &ndash; 250 learners</option>
-          <option>251 &ndash; 500 learners</option>
-          <option>501 &ndash; 1,000 learners</option>
-          <option>1,001 &ndash; 4,000 learners</option>
-          <option>4,000+ learners</option>
-          <option>Not Sure</option>
+          <option>Highly relevant</option>
+          <option>Relevant</option>
+          <option>Somewhat relevant</option>
+          <option>Not relevant</option>
         </select>
       </div>
 
-      <p class="form-section-title">Learning technology</p>
-      <div class="row2">
-        <div class="field">
-          <label>Current LMS / learning platform</label>
-          <select data-k="lms">
-            <option value="">Select one&hellip;</option>
-            <option>Moodle</option>
-            <option>Canvas</option>
-            <option>Blackboard</option>
-            <option>Brightspace</option>
-            <option>Google Classroom</option>
-            <option>Microsoft Teams</option>
-            <option>OpenLearning</option>
-            <option>Proprietary / In-house LMS</option>
-            <option>No LMS Currently</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>When are you looking to implement or explore a solution?</label>
-          <select data-k="timeline">
-            <option value="">Select one&hellip;</option>
-            <option>Immediately</option>
-            <option>Within 3 Months</option>
-            <option>Within 6 Months</option>
-            <option>Within 12 Months</option>
-            <option>Just Exploring</option>
-          </select>
-        </div>
-      </div>
       <div class="field">
-        <label>I would like to: <span class="req">*</span></label>
-        <select data-k="intent">
-          <option value="">Select one&hellip;</option>
-          <option>Book a Demo / Learn More About OpenLearning</option>
-          <option>Explore Employability Advantage</option>
-          <option>Discuss Micro-Credentials</option>
-          <option>Explore AI for Learning &amp; Education</option>
-          <option>Partnership Opportunity</option>
-          <option>Government Collaboration</option>
-          <option>Workforce &amp; Professional Development</option>
-          <option>Existing Client Support</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>How can OpenLearning help your institution or organization? <span class="req">*</span></label>
-        <textarea data-k="goals" placeholder="Tell us about your goals, challenges, current initiatives, learner numbers, or the outcomes you're hoping to achieve."></textarea>
+        <label>Which topics are you most interested in?
+          <span class="hint">Tap all that apply.</span>
+        </label>
+        <div class="chips" data-chips="interests">
+          <span class="chip">AI in Education</span>
+          <span class="chip">Micro-Credentials</span>
+          <span class="chip">LMS</span>
+          <span class="chip">Workforce Readiness</span>
+          <span class="chip">Skills Development</span>
+          <span class="chip">Student Employability</span>
+        </div>
       </div>
 
-      <div class="submit-row"><button class="btn btn-teal btn-block" id="qualifySubmit">Submit request</button></div>
-      <p class="form-note">By submitting this form, you consent to OpenLearning processing your information to respond to your request. For more information on how we handle personal data, please review our Privacy Policy.</p>
-    </div>
+      <div class="field">
+        <label>What is the biggest challenge your institution is facing right now?</label>
+        <textarea data-k="challenge" placeholder="e.g. learner engagement, employability outcomes, scaling programs…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Would you attend future OpenLearning events?</label>
+        <div class="radio-row" data-radio="attendFuture">
+          <label class="radio-opt"><input type="radio" name="attendFuture" value="Yes"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="attendFuture" value="Maybe"> Maybe</label>
+          <label class="radio-opt"><input type="radio" name="attendFuture" value="No"> No</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Additional comments</label>
+        <textarea data-k="comments" placeholder="Anything else you'd like to share with the team?"></textarea>
+      </div>
+
+      <!-- ══ OPT-IN: Contact & Demo Request (formerly Step 4) ══════ -->
+      <div class="optin">
+        <button type="button" class="optin-toggle" id="optinToggle" aria-expanded="false" aria-controls="optinFields">
+          <span class="ot-ico">🚀</span>
+          <span class="ot-copy">
+            <b>Interested in OpenLearning for your institution?</b>
+            <span>Optional — tell us about your organization and we'll follow up.</span>
+          </span>
+          <span class="ot-chev">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+
+        <div class="optin-fields" id="optinFields">
+
+          <!-- Contact information -->
+          <p class="form-section-title" style="margin-top:16px">Contact information</p>
+
+          <div class="row2">
+            <div class="field">
+              <label>Mobile number</label>
+              <input type="tel" data-k="mobile" placeholder="09xx xxx xxxx">
+            </div>
+            <div class="field">
+              <label>Job title / position</label>
+              <input type="text" data-k="title" placeholder="e.g. Dean, Director, Faculty, HR Manager">
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Institution / organization name</label>
+              <input type="text" data-k="instName" placeholder="Your organization">
+            </div>
+            <div class="field">
+              <label>Organization type</label>
+              <select data-k="orgType">
+                <option value="">Select one&hellip;</option>
+                <option>Private University / College</option>
+                <option>Public University / College</option>
+                <option>K-12 School</option>
+                <option>TVET Institution</option>
+                <option>TAFE</option>
+                <option>Government Agency</option>
+                <option>Government-Linked Company</option>
+                <option>Training Provider</option>
+                <option>Large Enterprise</option>
+                <option>SME</option>
+                <option>NGO / Foundation</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Learning technology -->
+          <p class="form-section-title">Learning technology</p>
+
+          <div class="row2">
+            <div class="field">
+              <label>Current LMS / learning platform</label>
+              <select data-k="lms">
+                <option value="">Select one&hellip;</option>
+                <option>Moodle</option>
+                <option>Canvas</option>
+                <option>Blackboard</option>
+                <option>Brightspace</option>
+                <option>Google Classroom</option>
+                <option>Microsoft Teams</option>
+                <option>OpenLearning</option>
+                <option>Proprietary / In-house LMS</option>
+                <option>No LMS Currently</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Number of learners</label>
+              <select data-k="learners">
+                <option value="">Select one&hellip;</option>
+                <option>0 &ndash; 1,500 learners</option>
+                <option>1,500 &ndash; 3,000 learners</option>
+                <option>3,000 &ndash; 5,000 learners</option>
+                <option>5,000+ learners</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>When are you looking to implement or explore a solution?</label>
+            <select data-k="timeline">
+              <option value="">Select one&hellip;</option>
+              <option>Immediately</option>
+              <option>Within 3 Months</option>
+              <option>Within 6 Months</option>
+              <option>Within 12 Months</option>
+              <option>Just Exploring</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>I would like to:</label>
+            <select data-k="intent">
+              <option value="">Select one&hellip;</option>
+              <option>Book a Demo / Learn More About OpenLearning</option>
+              <option>Explore Employability Advantage</option>
+              <option>Discuss Micro-Credentials</option>
+              <option>Explore AI for Learning &amp; Education</option>
+              <option>Partnership Opportunity</option>
+              <option>Government Collaboration</option>
+              <option>Workforce &amp; Professional Development</option>
+              <option>Existing Client Support</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>How can OpenLearning help your institution?</label>
+            <textarea data-k="help" placeholder="Tell us about your goals, challenges, or the outcomes you're hoping to achieve."></textarea>
+          </div>
+
+        </div><!-- /#optinFields -->
+      </div><!-- /.optin -->
+
+      <div class="submit-row"><button class="btn btn-teal btn-block" id="qualifySubmit">Submit &amp; get my certificate</button></div>
+      <p class="form-note">By submitting this form, you consent to OpenLearning processing your information to issue your certificate and respond to your request. For more information, please review our Privacy Policy.</p>
+    </div><!-- /#qualifyCard -->
   </div>
 </section>
+<hr class="sunline">
 
 <!-- RESOURCES -->
 <section class="resources">
@@ -556,9 +757,13 @@
   <span class="spark" style="top:30%;right:22%;animation-delay:.4s"></span>
   <span class="spark" style="bottom:24%;left:16%;animation-delay:1.6s"></span>
   <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Take it with you</p>
-      <h2>Today's resources</h2>
+    <div class="step-head">
+      <span class="step-num">★</span>
+      <div>
+        <p class="eyebrow">Take it with you</p>
+        <h2>Today's resources</h2>
+        <p>Everything from the day, ready to download.</p>
+      </div>
     </div>
     <div class="res-grid">
       <a class="res" href="#" target="_blank" rel="noopener"><span class="ri">&#128196;</span><span><b>Session slides</b><span>Decks from every talk</span></span></a>
@@ -750,9 +955,6 @@
       .then(function(res){ return res.json(); })
       .then(function(result){
         if(!result || !result.photos || !result.photos.length) return;
-        // API returns oldest-first; inserting each one "after the add tile" in that
-        // order means the last one inserted (the newest) ends up right after Add —
-        // same stacking behavior as a brand-new live upload.
         result.photos.forEach(function(p){
           renderPhotoTile(p.url, true);
         });
@@ -768,13 +970,11 @@
       var file = e.target.files && e.target.files[0];
       if(!file) return;
 
-      // Show the photo immediately using a local preview while it uploads
       var tile = renderPhotoTile(URL.createObjectURL(file), true);
       var img = tile.querySelector('img');
       attachTileClicks();
       updateDots();
 
-      // Upload to Vercel Blob so the photo is shared with every visitor, not just this browser
       fetch('/api/upload-photo', {
         method: 'POST',
         headers: {
@@ -785,9 +985,7 @@
       })
         .then(function(res){ return res.json(); })
         .then(function(result){
-          if(result && result.url){
-            img.src = result.url; // swap local preview for the real shared URL
-          }
+          if(result && result.url){ img.src = result.url; }
         })
         .catch(function(err){ console.error('Photo upload failed:', err); });
 
@@ -833,8 +1031,7 @@
       .then(function(res){ return res.json(); })
       .then(function(result){
         if(!result || !result.takeaways || !result.takeaways.length) return;
-        taWall.innerHTML = ''; // clear the hardcoded sample pills
-        // oldest first, each prepended -> newest ends up on top, same as live adds
+        taWall.innerHTML = '';
         result.takeaways.forEach(function(item){
           renderTakeawayPill(item.name, item.takeaway, true);
         });
@@ -862,14 +1059,53 @@
   if(taAdd) taAdd.addEventListener('click', addTakeaway);
   if(taText) taText.addEventListener('keydown', function(e){ if(e.key==='Enter') addTakeaway(); });
 
-  /* ---------------- QUALIFIER: contact & demo request form ---------------- */
+  /* ---------------- EVALUATION: star rating ---------------- */
+  var ratingStars = document.getElementById('ratingStars');
+  var ratingLabel = document.getElementById('ratingLabel');
+  var ratingInput = document.querySelector('[data-k="rating"]');
+  var RATING_WORDS = {1:'Poor', 2:'Fair', 3:'Good', 4:'Very good', 5:'Excellent'};
+
+  function paintStars(val){
+    if(!ratingStars) return;
+    Array.prototype.slice.call(ratingStars.querySelectorAll('.star')).forEach(function(s){
+      s.classList.toggle('on', Number(s.getAttribute('data-val')) <= val);
+    });
+  }
+  if(ratingStars){
+    var stars = Array.prototype.slice.call(ratingStars.querySelectorAll('.star'));
+    stars.forEach(function(star){
+      var val = Number(star.getAttribute('data-val'));
+      star.addEventListener('mouseenter', function(){ paintStars(val); });
+      star.addEventListener('click', function(){
+        ratingInput.value = String(val);
+        paintStars(val);
+        if(ratingLabel) ratingLabel.textContent = val + ' / 5 — ' + (RATING_WORDS[val] || '');
+      });
+    });
+    ratingStars.addEventListener('mouseleave', function(){
+      paintStars(Number(ratingInput.value) || 0);
+    });
+  }
+
+  /* ---------------- EVALUATION: interest chips ---------------- */
   document.querySelectorAll('.chips .chip').forEach(function(chip){
     chip.addEventListener('click', function(){ chip.classList.toggle('on'); });
   });
 
+  /* ---------------- EVALUATION: optional opt-in section ---------------- */
+  var optinToggle = document.getElementById('optinToggle');
+  var optinFields = document.getElementById('optinFields');
+  if(optinToggle && optinFields){
+    optinToggle.addEventListener('click', function(){
+      var open = optinFields.classList.toggle('open');
+      optinToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+  /* ---------------- EVALUATION: submit ---------------- */
   var qualifyCard = document.getElementById('qualifyCard');
   var submitBtn = document.getElementById('qualifySubmit');
-  var REQUIRED_KEYS = ['name','email','mobile','title','org','orgType','learners','intent','goals'];
+  var REQUIRED_KEYS = ['name','email','rating'];
 
   function collectQualify(){
     var data = {};
@@ -885,7 +1121,17 @@
       var checked = group.querySelector('input:checked');
       data[key] = checked ? checked.value : '';
     });
+    data.learnMore = optinFields ? optinFields.classList.contains('open') : false;
     return data;
+  }
+
+  function focusKey(key){
+    var el = qualifyCard.querySelector('[data-k="'+key+'"]');
+    if(key === 'rating'){
+      if(ratingStars) ratingStars.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    if(el){ el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); }
   }
 
   if(submitBtn){
@@ -893,34 +1139,31 @@
       var data = collectQualify();
       for(var i=0;i<REQUIRED_KEYS.length;i++){
         var key = REQUIRED_KEYS[i];
-        if(!data[key]){
-          var el = qualifyCard.querySelector('[data-k="'+key+'"]');
-          if(el) el.focus();
-          return;
-        }
+        if(!data[key]){ focusKey(key); return; }
       }
-      if(data.email.indexOf('@') < 0){
-        qualifyCard.querySelector('[data-k="email"]').focus();
-        return;
-      }
+      if(data.email.indexOf('@') < 0){ focusKey('email'); return; }
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting…';
 
-      fetch('/api/submit-lead', {
+      fetch('/api/submit-eval', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
-        .catch(function(err){ console.error('Lead submit failed:', err); })
+        .catch(function(err){ console.error('Evaluation submit failed:', err); })
         .finally(function(){
-          var first = data.name.split(' ')[0];
+          var first = (data.name.split(' ')[0]) || 'there';
           var done = document.createElement('div');
           done.className = 'done';
-          done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p>';
-          done.querySelector('h4').textContent = "You're on the list!";
-          done.querySelector('p').textContent = "Thanks, " + first + " — the OpenLearning Pilipinas team will review your request and reach out shortly.";
+          done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p><p class="sub"></p>';
+          done.querySelector('h4').textContent = "Thank you, " + first + "!";
+          done.querySelector('p').textContent = "Your Certificate of Attendance will be sent to " + data.email + " shortly. Please keep an eye on your inbox.";
+          done.querySelector('.sub').textContent = data.learnMore
+            ? "We've also noted your interest in learning more — the OpenLearning Pilipinas team will be in touch."
+            : "Thanks for helping us shape the next event.";
           qualifyCard.replaceWith(done);
+          window.scrollTo({top: document.getElementById('step3').offsetTop - 40, behavior:'smooth'});
         });
     });
   }
