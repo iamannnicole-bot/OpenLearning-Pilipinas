@@ -597,69 +597,67 @@
       <button class="btn btn-teal viewall-btn" id="viewAllPhotosBtn" type="button">View all photos</button>
     </div>
 
-    <!-- PHOTO GRID MODAL -->
-    <div class="photo-grid-modal" id="photoGridModal" role="dialog" aria-modal="true" aria-label="All photos" aria-hidden="true">
+    <div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
       <div class="photo-grid-panel">
         <div class="photo-grid-header">
           <h3>All photos</h3>
-          <button class="close" id="photoGridClose" aria-label="Close photo gallery">&#x2715;</button>
+          <button class="close" id="photoGridClose" aria-label="Close">×</button>
         </div>
         <div class="photo-grid" id="photoGrid"></div>
       </div>
     </div>
 
-    <!-- PHOTO LIGHTBOX -->
-    <div class="photo-lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+    <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
       <div class="lightbox-panel">
-        <button class="close" id="photoLightboxClose" aria-label="Close photo viewer">&#x2715;</button>
+        <button class="close" id="photoLightboxClose" aria-label="Close">×</button>
         <div class="lightbox-img" id="lightboxImageWrapper"></div>
         <div class="lightbox-caption" id="lightboxCaption"></div>
       </div>
     </div>
-  </div>
-</section>
-<hr class="sunline">
+  </section>
+  <hr class="sunline">
 
-<!-- STEP 2 · SHARE ONE TAKEAWAY -->
-<section class="takeaway-section" id="step2">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">2</span>
-      <div>
-        <p class="eyebrow">One insight</p>
-        <h2>What is one insight you're taking home today?</h2>
-        <p>Sum it up in a sentence and add it to the wall — your words might spark someone else's next idea.</p>
-      </div>
-    </div>
 
-    <div class="takeaway">
-      <div class="takeaway-head">
-        <span class="ta-icon">💡</span>
+  <!-- STEP 2 · SHARE ONE TAKEAWAY -->
+  <section class="takeaway-section" id="step2">
+    <div class="wrap">
+      <div class="step-head">
+        <span class="step-num">2</span>
         <div>
-          <h3>Add your insight to the wall</h3>
-          <p class="count"><b id="taCount">0</b> insights shared so far today</p>
+          <p class="eyebrow">One insight</p>
+          <h2>What is one insight you're taking home today?</h2>
+          <p>Sum it up in a sentence and add it to the wall — your words might spark someone else's next idea.</p>
         </div>
       </div>
-      <div class="ta-form">
-        <div class="ta-field">
-          <label for="taName">First name</label>
-          <input type="text" id="taName" placeholder="Your name" maxlength="24">
+
+      <div class="takeaway">
+        <div class="takeaway-head">
+          <span class="ta-icon">💡</span>
+          <div>
+            <h3>Add your insight to the wall</h3>
+            <p class="count"><b id="taCount">0</b> insights shared so far today</p>
+          </div>
         </div>
-        <div class="ta-field">
-          <label for="taText">Your insight</label>
-          <input type="text" id="taText" placeholder="e.g. Designing AI-ready curriculum" maxlength="60">
-          <span class="ta-counter" id="taCounter">60 characters left</span>
+        <div class="ta-form">
+          <div class="ta-field">
+            <label for="taName">First name</label>
+            <input type="text" id="taName" placeholder="Your name" maxlength="24">
+          </div>
+          <div class="ta-field">
+            <label for="taText">Your insight</label>
+            <input type="text" id="taText" placeholder="e.g. Designing AI-ready curriculum" maxlength="60">
+            <span class="ta-counter" id="taCounter">60 characters left</span>
+          </div>
+          <div class="ta-field">
+            <label class="spacer" aria-hidden="true">Add</label>
+            <button class="btn btn-ink" id="taAdd">Add to wall</button>
+          </div>
         </div>
-        <div class="ta-field">
-          <label class="spacer" aria-hidden="true">Add</label>
-          <button class="btn btn-ink" id="taAdd">Add to wall</button>
-        </div>
+        <div class="ta-wall" id="taWall"></div>
       </div>
-      <div class="ta-wall" id="taWall"></div>
     </div>
-  </div>
-</section>
-<hr class="sunline">
+  </section>
+  <hr class="sunline">
 
 <!-- STEP 3 · EVALUATION + CERTIFICATE -->
 <section class="evaluate" id="step3">
