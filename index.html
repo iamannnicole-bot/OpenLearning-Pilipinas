@@ -120,9 +120,6 @@
   .step-head .eyebrow{color:var(--teal);margin-bottom:6px}
   .step-head h2{font-weight:800;font-size:clamp(1.55rem,6vw,2.4rem);color:var(--ink)}
   .step-head p{font-family:var(--body);color:var(--ink-soft);margin-top:8px;max-width:50ch}
-  .resources .step-head .eyebrow{color:var(--yellow)}
-  .resources .step-head h2{color:#fff}
-  .resources .step-num{background:linear-gradient(135deg,var(--yellow),#ffe27a);color:var(--ink)}
 
   /* ---- photos ---- */
   .photos{background:var(--paper)}
@@ -243,13 +240,13 @@
 
   .cert-note{display:flex;gap:13px;align-items:flex-start;
     background:linear-gradient(135deg,rgba(253,204,17,.16),rgba(70,214,200,.12));
-    border:1px solid var(--line);border-radius:14px;padding:15px 17px;margin-bottom:22px}
+    border:1px solid var(--line);border-radius:14px;padding:15px 17px;margin-bottom:28px}
   .cert-note .ci{font-size:1.4rem;flex:none;line-height:1.2}
   .cert-note p{font-family:var(--body);font-size:.88rem;color:var(--ink);margin:0}
   .cert-note b{color:var(--teal-deep)}
 
-  /* ---- shared field styles (used by both eval and lead forms) ---- */
-  .field{margin-top:16px}
+  /* ---- FIX: increased field spacing so labels breathe from the field above ---- */
+  .field{margin-top:22px}
   .qform-card .field:first-child{margin-top:0}
   .field label{
     display:block;
@@ -257,9 +254,9 @@
     font-size:.82rem;
     font-weight:600;
     color:var(--ink);
-    margin-bottom:6px;
+    margin-bottom:7px;
   }
-  .field .hint{font-family:var(--body);font-weight:400;font-size:.78rem;color:var(--ink-soft);display:block;margin-top:2px}
+  .field .hint{font-family:var(--body);font-weight:400;font-size:.78rem;color:var(--ink-soft);display:block;margin-top:3px}
   .field input,
   .field select,
   .field textarea{
@@ -282,7 +279,23 @@
   }
   .field textarea{resize:vertical;min-height:74px}
   .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
-  .row2{display:grid;gap:12px}
+
+  /* ---- field error state ---- */
+  .field input.error,.field select.error,.field textarea.error{
+    outline:2px solid #e74c3c;
+    outline-offset:1px;
+    border-color:transparent;
+  }
+  .field-error{
+    font-family:var(--body);
+    font-size:.76rem;
+    color:#e74c3c;
+    margin-top:5px;
+    display:none;
+  }
+  .field-error.visible{display:block}
+
+  .row2{display:grid;gap:16px}
   @media(min-width:480px){
     .row2{grid-template-columns:1fr 1fr;align-items:end}
     .row2 .field{margin-top:0;display:flex;flex-direction:column}
@@ -301,8 +314,8 @@
     text-transform:uppercase;
     letter-spacing:.08em;
     color:var(--teal);
-    margin-top:26px;
-    padding-top:18px;
+    margin-top:30px;
+    padding-top:20px;
     border-top:1px dashed var(--line);
   }
 
@@ -326,8 +339,8 @@
 
   .req{color:var(--teal);font-weight:700}
 
-  /* opt-in (collapsible) — now "Connect with OpenLearning" */
-  .optin{margin-top:26px;padding-top:22px;border-top:1px dashed var(--line)}
+  /* opt-in (collapsible) */
+  .optin{margin-top:30px;padding-top:24px;border-top:1px dashed var(--line)}
   .optin-toggle{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
     background:var(--mist-tint);border:1px solid var(--line);border-radius:14px;padding:15px 17px;transition:.15s;font-family:var(--body)}
   .optin-toggle:hover{border-color:var(--teal);box-shadow:0 0 20px -10px rgba(41,167,159,.5)}
@@ -343,7 +356,7 @@
 
   @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-  .submit-row{margin-top:24px}
+  .submit-row{margin-top:28px}
   .form-note{font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:12px;text-align:center}
   .done{text-align:center;padding:30px 6px;animation:slidein .3s ease}
   .done .mark{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 35% 30%,var(--teal-bright),var(--teal));
@@ -352,11 +365,6 @@
   .done p{font-family:var(--body);color:var(--ink-soft);font-size:.92rem;margin-top:8px;max-width:38ch;margin-inline:auto}
   .done .sub{font-size:.82rem;margin-top:10px}
 
-  /* ---- resources (deep teal + glow) ---- */
-  .resources{background:linear-gradient(160deg,var(--teal-deep),var(--teal-deeper));color:#fff}
-  .resources .orb.a{width:280px;height:280px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-80px;left:-50px;opacity:.4}
-  .resources .orb.b{width:240px;height:240px;background:radial-gradient(circle,var(--violet),transparent 65%);bottom:-90px;right:-40px;opacity:.4}
-  .resources .wrap{position:relative;z-index:2}
   .res-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
   .res{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
     border-radius:14px;padding:16px 18px;color:#fff;text-decoration:none;transition:.15s}
@@ -370,10 +378,6 @@
   @media(min-width:680px){ footer .wrap{flex-direction:row;justify-content:space-between;align-items:flex-end} }
   footer p{font-family:var(--body)}
   footer a{color:var(--yellow);text-decoration:none}
-  footer .socials{display:flex;gap:14px}
-  footer .socials a{color:rgba(255,255,255,.72)}
-  footer .socials a:hover{color:#fff}
-  footer .socials svg{width:20px;height:20px}
   .foot-note{font-size:.78rem;color:rgba(255,255,255,.45)}
 
   @media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important} }
@@ -553,7 +557,7 @@
       </div>
 
       <!-- ── Event feedback ──────────────────────────────────────── -->
-      <p class="form-section-title" style="margin-top:22px;padding-top:18px">Event feedback</p>
+      <p class="form-section-title" style="margin-top:28px;padding-top:22px">Event feedback</p>
 
       <div class="field">
         <label>How would you rate the event overall? <span class="req">*</span></label>
@@ -622,7 +626,7 @@
         <textarea data-k="comments" placeholder="Anything else you'd like to share with the team?"></textarea>
       </div>
 
-      <!-- ══ OPT-IN: Contact & Demo Request (formerly Step 4) ══════ -->
+      <!-- ══ OPT-IN: Contact & Demo Request ══════ -->
       <div class="optin">
         <button type="button" class="optin-toggle" id="optinToggle" aria-expanded="false" aria-controls="optinFields">
           <span class="ot-ico">🚀</span>
@@ -638,12 +642,15 @@
         <div class="optin-fields" id="optinFields">
 
           <!-- Contact information -->
-          <p class="form-section-title" style="margin-top:16px">Contact information</p>
+          <p class="form-section-title" style="margin-top:18px">Contact information</p>
 
           <div class="row2">
             <div class="field">
-              <label>Mobile number</label>
-              <input type="tel" data-k="mobile" placeholder="09xx xxx xxxx">
+              <label>Mobile number
+                <span class="hint">Philippine number, 11 digits (e.g. 09XX XXX XXXX)</span>
+              </label>
+              <input type="tel" data-k="mobile" id="mobileInput" placeholder="09XX XXX XXXX" maxlength="13">
+              <span class="field-error" id="mobileError">Please enter a valid 11-digit Philippine mobile number (e.g. 09171234567).</span>
             </div>
             <div class="field">
               <label>Job title / position</label>
@@ -751,27 +758,6 @@
 </section>
 <hr class="sunline">
 
-<!-- RESOURCES -->
-<section class="resources">
-  <span class="orb a"></span><span class="orb b"></span>
-  <span class="spark" style="top:30%;right:22%;animation-delay:.4s"></span>
-  <span class="spark" style="bottom:24%;left:16%;animation-delay:1.6s"></span>
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">★</span>
-      <div>
-        <p class="eyebrow">Take it with you</p>
-        <h2>Today's resources</h2>
-        <p>Everything from the day, ready to download.</p>
-      </div>
-    </div>
-    <div class="res-grid">
-      <a class="res" href="#" target="_blank" rel="noopener"><span class="ri">&#128196;</span><span><b>Session slides</b><span>Decks from every talk</span></span></a>
-      <a class="res" href="#" target="_blank" rel="noopener"><span class="ri">&#128218;</span><span><b>Future-skills report</b><span>PH 2026 outlook (PDF)</span></span></a>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
@@ -782,18 +768,13 @@
       <p style="margin-top:10px;max-width:38ch;font-size:.9rem">Thanks for being part of OpenLearning Pilipinas 2026. Reach us anytime at <a href="mailto:hello@openlearning.com">hello@openlearning.com</a> or <a href="https://solutions.openlearning.com" target="_blank" rel="noopener">solutions.openlearning.com</a>.</p>
       <p class="foot-note" style="margin-top:14px">&copy; 2026 OpenLearning &middot; #OpenlearningPilipinas</p>
     </div>
-    <div class="socials">
-      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.99H5.67v8.35h2.67zM7 8.82a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.52v-4.57c0-2.45-1.31-3.59-3.06-3.59-1.41 0-2.04.78-2.39 1.32v-1.13h-2.67v8.35h2.67v-4.66c0-.25 0-.5.07-.67.2-.49.65-1 1.4-1 .98 0 1.38.75 1.38 1.85v4.48h2.67z"/></svg></a>
-      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg></a>
-      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-    </div>
   </div>
 </footer>
 
 <script>
 (function(){
   var HASHTAG = "#OpenlearningPilipinas";
-  var PAGE_URL = "https://pilipinas.openlearning.com"; // placeholder — swap for your live URL
+  var PAGE_URL = "https://pilipinas.openlearning.com";
 
   var url = encodeURIComponent(PAGE_URL);
   var li = document.getElementById('shareLinkedIn');
@@ -1102,6 +1083,48 @@
     });
   }
 
+  /* ---------------- MOBILE NUMBER VALIDATION ---------------- */
+  var mobileInput = document.getElementById('mobileInput');
+  var mobileError = document.getElementById('mobileError');
+
+  function sanitizeMobile(val){
+    // Strip spaces, dashes, parentheses for digit counting
+    return val.replace(/[\s\-\(\)]/g, '');
+  }
+
+  function validateMobile(val){
+    // Must start with 09 and be exactly 11 digits
+    var clean = sanitizeMobile(val);
+    if(clean === '') return true; // empty = optional, no error
+    return /^09\d{9}$/.test(clean);
+  }
+
+  function showMobileError(show){
+    if(!mobileInput || !mobileError) return;
+    mobileInput.classList.toggle('error', show);
+    mobileError.classList.toggle('visible', show);
+  }
+
+  if(mobileInput){
+    // Only allow digits, spaces, dashes as user types
+    mobileInput.addEventListener('input', function(){
+      // Strip anything that's not a digit, space or dash
+      this.value = this.value.replace(/[^\d\s\-]/g, '');
+      // If they've typed enough characters, validate live
+      if(sanitizeMobile(this.value).length >= 11){
+        showMobileError(!validateMobile(this.value));
+      } else {
+        showMobileError(false);
+      }
+    });
+    mobileInput.addEventListener('blur', function(){
+      if(this.value.trim()) showMobileError(!validateMobile(this.value));
+    });
+    mobileInput.addEventListener('focus', function(){
+      showMobileError(false);
+    });
+  }
+
   /* ---------------- EVALUATION: submit ---------------- */
   var qualifyCard = document.getElementById('qualifyCard');
   var submitBtn = document.getElementById('qualifySubmit');
@@ -1137,14 +1160,28 @@
   if(submitBtn){
     submitBtn.addEventListener('click', function(){
       var data = collectQualify();
+
+      // Check required fields
       for(var i=0;i<REQUIRED_KEYS.length;i++){
         var key = REQUIRED_KEYS[i];
         if(!data[key]){ focusKey(key); return; }
       }
       if(data.email.indexOf('@') < 0){ focusKey('email'); return; }
 
+      // Validate mobile if opt-in is open and mobile is filled
+      if(optinFields && optinFields.classList.contains('open')){
+        var mobileVal = (data.mobile || '').trim();
+        if(mobileVal && !validateMobile(mobileVal)){
+          showMobileError(true);
+          if(mobileInput){ mobileInput.scrollIntoView({behavior:'smooth', block:'center'}); mobileInput.focus(); }
+          return;
+        }
+        // Store only the digit-clean version
+        if(mobileVal) data.mobile = sanitizeMobile(mobileVal);
+      }
+
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting…';
+      submitBtn.textContent = 'Submitting\u2026';
 
       fetch('/api/submit-eval', {
         method: 'POST',
@@ -1160,7 +1197,7 @@
           done.querySelector('h4').textContent = "Thank you, " + first + "!";
           done.querySelector('p').textContent = "Your Certificate of Attendance will be sent to " + data.email + " shortly. Please keep an eye on your inbox.";
           done.querySelector('.sub').textContent = data.learnMore
-            ? "We've also noted your interest in learning more — the OpenLearning Pilipinas team will be in touch."
+            ? "We\u2019ve also noted your interest in learning more \u2014 the OpenLearning Pilipinas team will be in touch."
             : "Thanks for helping us shape the next event.";
           qualifyCard.replaceWith(done);
           window.scrollTo({top: document.getElementById('step3').offsetTop - 40, behavior:'smooth'});
