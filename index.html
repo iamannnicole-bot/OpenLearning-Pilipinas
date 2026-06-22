@@ -32,7 +32,17 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:var(--body);color:var(--ink);background:var(--mist);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  body.no-scroll{overflow:hidden}
+
+  /* ── SCROLL LOCK: works on iOS Safari too ── */
+  body.modal-open{
+    overflow:hidden;
+    /* iOS needs position:fixed to truly stop rubber-band scroll */
+    position:fixed;
+    width:100%;
+    /* preserve scroll position via top */
+    left:0;
+  }
+
   h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.02em;line-height:1.08}
   .wrap{width:100%;max-width:560px;margin:0 auto;padding:0 22px}
   @media(min-width:920px){ .wrap{max-width:1080px;padding:0 40px} }
@@ -164,42 +174,214 @@
 
   .viewall-btn{display:flex;width:100%;margin-top:16px}
 
-  .photo-grid-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
-    padding-bottom:max(16px, env(safe-area-inset-bottom));
-    background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
-  .photo-grid-modal.active{display:flex}
-  .photo-grid-panel{position:relative;width:100%;max-width:720px;
-    max-height:min(80dvh, calc(100dvh - 32px));
-    overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
-    display:flex;flex-direction:column}
-  .photo-grid-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
-    border-bottom:1px solid var(--line);flex:none;background:#fff}
-  .photo-grid-header h3{font-weight:700;font-size:1.1rem;color:var(--ink)}
-  .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
-    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none}
-  .photo-grid-header .close:hover{background:var(--line)}
-  .photo-grid{flex:0 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
-    -webkit-overflow-scrolling:touch}
-  @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
-  .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
-  .grid-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .15s ease}
-  .grid-tile:hover img{transform:scale(1.05)}
+  /* ════════════════════════════════════════════════════════
+     MODAL FIXES — full-viewport, no bleed, iOS-safe
+     ════════════════════════════════════════════════════════ */
 
-  .photo-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
-    padding-bottom:max(16px, env(safe-area-inset-bottom));
-    background:rgba(5,42,59,.92);z-index:999;isolation:isolate}
-  .photo-lightbox.active{display:flex}
-  .photo-lightbox .lightbox-panel{position:relative;width:100%;max-width:980px;max-height:calc(100dvh - 32px);
-    overflow:auto;border-radius:24px;background:#04191f;box-shadow:0 0 80px rgba(0,0,0,.55)}
-  .photo-lightbox .lightbox-img{background:#04191f;display:flex;align-items:center;justify-content:center;min-height:220px;padding:16px}
-  .photo-lightbox .lightbox-img img{max-width:100%;max-height:min(70dvh,640px);object-fit:contain;border-radius:14px;display:block}
-  .photo-lightbox .lightbox-text{color:#fff;font-size:1.05rem;padding:24px;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;line-height:1.4}
-  .photo-lightbox .lightbox-caption{color:#fff;padding:16px 18px;font-size:.95rem;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
-  .photo-lightbox button.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
-    background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2}
-  .photo-lightbox button.close:hover{background:rgba(255,255,255,.26)}
+  /* Shared backdrop */
+  .photo-grid-modal,
+  .photo-lightbox {
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    min-height: 100%;
+    display: none;
+    /* Bottom-sheet on mobile: panel slides up from bottom */
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    background: rgba(5, 42, 59, 0.88);
+    /* Above topbar (z:40) and everything */
+    z-index: 9999;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Lightbox stays centred */
+  .photo-lightbox {
+    align-items: center;
+    padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px)
+             env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
+  }
+
+  .photo-grid-modal.active,
+  .photo-lightbox.active {
+    display: flex;
+  }
+
+  /* ── Photo Grid panel: sizes to content, capped at 85dvh ── */
+  .photo-grid-panel {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    /* Content-driven height — expands with photos, capped so backdrop shows */
+    max-height: 85dvh;
+    border-radius: 20px 20px 0 0;
+    background: #fff;
+    box-shadow: 0 -8px 60px rgba(0,0,0,.35);
+    display: flex;
+    flex-direction: column;
+    /* Home-bar safe area on iOS */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* On tablet/desktop: centred floating card */
+  @media(min-width: 600px){
+    .photo-grid-modal { align-items: center; padding: 24px; }
+    .photo-grid-panel {
+      border-radius: 20px;
+      max-height: 80dvh;
+      box-shadow: 0 0 80px rgba(0,0,0,.45);
+      padding-bottom: 0;
+    }
+  }
+
+  .photo-grid-header {
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+  }
+  /* Drag-handle pill (mobile bottom-sheet affordance) */
+  .photo-grid-header::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 4px;
+    border-radius: 99px;
+    background: var(--line);
+  }
+  @media(min-width:600px){
+    .photo-grid-header { padding: 16px 18px; border-radius: 20px 20px 0 0; }
+    .photo-grid-header::before { display: none; }
+  }
+
+  .photo-grid-header h3 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+
+  .photo-grid-header .close {
+    flex: none;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--mist);
+    color: var(--ink);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    /* Larger tap target */
+    touch-action: manipulation;
+  }
+  .photo-grid-header .close:hover { background: var(--line); }
+
+  /* The scrollable grid inside the panel */
+  .photo-grid {
+    /* flex child: fills remaining panel space, scrolls when content overflows cap */
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Rows size to content so panel expands naturally */
+    grid-auto-rows: min-content;
+    gap: 4px;
+    padding: 4px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  @media(min-width:560px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .grid-tile {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--mist);
+  }
+  .grid-tile img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .15s ease;
+  }
+  .grid-tile:hover img { transform: scale(1.05); }
+
+  /* ── Lightbox panel ── */
+  .photo-lightbox .lightbox-panel {
+    position: relative;
+    width: calc(100% - 32px);
+    max-width: 980px;
+    /* Allow the panel to be tall but not overflow */
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    background: #04191f;
+    box-shadow: 0 0 80px rgba(0,0,0,.55);
+  }
+
+  .photo-lightbox .lightbox-img {
+    background: #04191f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    padding: 16px;
+  }
+  .photo-lightbox .lightbox-img img {
+    max-width: 100%;
+    max-height: min(65dvh, 600px);
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+  }
+  .photo-lightbox .lightbox-text {
+    color: #fff;
+    font-size: 1.05rem;
+    padding: 24px;
+    text-align: center;
+    min-height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1.4;
+  }
+  .photo-lightbox .lightbox-caption {
+    color: #fff;
+    padding: 14px 16px;
+    font-size: .9rem;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,.07);
+  }
+  .photo-lightbox button.close {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.16);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    touch-action: manipulation;
+  }
+  .photo-lightbox button.close:hover { background: rgba(255,255,255,.28); }
+
+  /* ════════════════════════════════════════════════════════ */
 
   /* ---- takeaway ---- */
   .takeaway-section{background:linear-gradient(180deg,var(--mist),var(--mist-tint))}
@@ -245,54 +427,20 @@
   .cert-note p{font-family:var(--body);font-size:.88rem;color:var(--ink);margin:0}
   .cert-note b{color:var(--teal-deep)}
 
-  /* ---- FIX: increased field spacing so labels breathe from the field above ---- */
   .field{margin-top:22px}
   .qform-card .field:first-child{margin-top:0}
-  .field label{
-    display:block;
-    font-family:var(--display);
-    font-size:.82rem;
-    font-weight:600;
-    color:var(--ink);
-    margin-bottom:7px;
-  }
+  .field label{display:block;font-family:var(--display);font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:7px}
   .field .hint{font-family:var(--body);font-weight:400;font-size:.78rem;color:var(--ink-soft);display:block;margin-top:3px}
-  .field input,
-  .field select,
-  .field textarea{
-    width:100%;
-    font-family:var(--body);
-    font-size:.95rem;
-    color:var(--ink);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:12px 14px;
-    background:#fff;
-  }
-  .field select{
-    appearance:none;-webkit-appearance:none;-moz-appearance:none;
-    padding-right:42px;
+  .field input,.field select,.field textarea{width:100%;font-family:var(--body);font-size:.95rem;color:var(--ink);
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+  .field select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:42px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2356696F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat:no-repeat;
-    background-position:right 14px center;
-    background-size:16px;
-  }
+    background-repeat:no-repeat;background-position:right 14px center;background-size:16px}
   .field textarea{resize:vertical;min-height:74px}
   .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
 
-  /* ---- field error state ---- */
-  .field input.error,.field select.error,.field textarea.error{
-    outline:2px solid #e74c3c;
-    outline-offset:1px;
-    border-color:transparent;
-  }
-  .field-error{
-    font-family:var(--body);
-    font-size:.76rem;
-    color:#e74c3c;
-    margin-top:5px;
-    display:none;
-  }
+  .field input.error,.field select.error,.field textarea.error{outline:2px solid #e74c3c;outline-offset:1px;border-color:transparent}
+  .field-error{font-family:var(--body);font-size:.76rem;color:#e74c3c;margin-top:5px;display:none}
   .field-error.visible{display:block}
 
   .row2{display:grid;gap:16px}
@@ -306,40 +454,27 @@
     .row2-top .field input{margin-top:0}
   }
 
-  /* form section divider title */
-  .form-section-title{
-    font-family:var(--display);
-    font-size:.74rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    color:var(--teal);
-    margin-top:30px;
-    padding-top:20px;
-    border-top:1px dashed var(--line);
-  }
+  .form-section-title{font-family:var(--display);font-size:.74rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--teal);margin-top:30px;padding-top:20px;border-top:1px dashed var(--line)}
 
-  /* star rating */
   .stars{display:flex;gap:8px;margin-top:6px}
   .star{font-size:1.9rem;line-height:1;cursor:pointer;color:var(--line);background:none;border:none;padding:0;transition:.12s;-webkit-tap-highlight-color:transparent}
   .star:hover{transform:scale(1.12)}
   .star.on{color:var(--yellow);text-shadow:0 0 12px rgba(253,204,17,.65)}
   .rating-label{font-family:var(--body);font-size:.82rem;color:var(--ink-soft);margin-top:6px;min-height:1.1em}
 
-  /* interest chips */
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
   .chip{font-family:var(--body);font-size:.85rem;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);
     border-radius:999px;padding:8px 14px;cursor:pointer;transition:.12s;user-select:none}
   .chip:hover{border-color:var(--teal)}
   .chip.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 0 18px -6px rgba(41,167,159,.8)}
 
-  .radio-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:6px 0}
-  .radio-opt{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:.92rem;color:var(--ink);cursor:pointer}
-  .radio-opt input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex:none}
+  .radio-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:6px 0;align-items:center}
+  .radio-opt{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:.92rem;color:var(--ink);cursor:pointer;line-height:1}
+  .radio-opt input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex:none;margin:0;vertical-align:middle;position:relative;top:0}
 
   .req{color:var(--teal);font-weight:700}
 
-  /* opt-in (collapsible) */
   .optin{margin-top:30px;padding-top:24px;border-top:1px dashed var(--line)}
   .optin-toggle{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
     background:var(--mist-tint);border:1px solid var(--line);border-radius:14px;padding:15px 17px;transition:.15s;font-family:var(--body)}
@@ -462,19 +597,21 @@
       <button class="btn btn-teal viewall-btn" id="viewAllPhotosBtn" type="button">View all photos</button>
     </div>
 
-    <div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
+    <!-- PHOTO GRID MODAL -->
+    <div class="photo-grid-modal" id="photoGridModal" role="dialog" aria-modal="true" aria-label="All photos" aria-hidden="true">
       <div class="photo-grid-panel">
         <div class="photo-grid-header">
           <h3>All photos</h3>
-          <button class="close" id="photoGridClose" aria-label="Close">×</button>
+          <button class="close" id="photoGridClose" aria-label="Close photo gallery">&#x2715;</button>
         </div>
         <div class="photo-grid" id="photoGrid"></div>
       </div>
     </div>
 
-    <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+    <!-- PHOTO LIGHTBOX -->
+    <div class="photo-lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
       <div class="lightbox-panel">
-        <button class="close" id="photoLightboxClose" aria-label="Close">×</button>
+        <button class="close" id="photoLightboxClose" aria-label="Close photo viewer">&#x2715;</button>
         <div class="lightbox-img" id="lightboxImageWrapper"></div>
         <div class="lightbox-caption" id="lightboxCaption"></div>
       </div>
@@ -543,7 +680,6 @@
         <p>Please complete this form to receive your <b>Certificate of Attendance</b>. Certificates will be sent to the email address you provide below.</p>
       </div>
 
-      <!-- ── Contact details ─────────────────────────────────────── -->
       <div class="row2 row2-top">
         <div class="field">
           <label>Full name <span class="req">*</span></label>
@@ -556,7 +692,6 @@
         </div>
       </div>
 
-      <!-- ── Event feedback ──────────────────────────────────────── -->
       <p class="form-section-title" style="margin-top:28px;padding-top:22px">Event feedback</p>
 
       <div class="field">
@@ -626,7 +761,6 @@
         <textarea data-k="comments" placeholder="Anything else you'd like to share with the team?"></textarea>
       </div>
 
-      <!-- ══ OPT-IN: Contact & Demo Request ══════ -->
       <div class="optin">
         <button type="button" class="optin-toggle" id="optinToggle" aria-expanded="false" aria-controls="optinFields">
           <span class="ot-ico">🚀</span>
@@ -640,10 +774,7 @@
         </button>
 
         <div class="optin-fields" id="optinFields">
-
-          <!-- Contact information -->
           <p class="form-section-title" style="margin-top:18px">Contact information</p>
-
           <div class="row2">
             <div class="field">
               <label>Mobile number
@@ -657,7 +788,6 @@
               <input type="text" data-k="title" placeholder="e.g. Dean, Director, Faculty, HR Manager">
             </div>
           </div>
-
           <div class="row2">
             <div class="field">
               <label>Institution / organization name</label>
@@ -682,10 +812,7 @@
               </select>
             </div>
           </div>
-
-          <!-- Learning technology -->
           <p class="form-section-title">Learning technology</p>
-
           <div class="row2">
             <div class="field">
               <label>Current LMS / learning platform</label>
@@ -714,7 +841,6 @@
               </select>
             </div>
           </div>
-
           <div class="field">
             <label>When are you looking to implement or explore a solution?</label>
             <select data-k="timeline">
@@ -726,7 +852,6 @@
               <option>Just Exploring</option>
             </select>
           </div>
-
           <div class="field">
             <label>I would like to:</label>
             <select data-k="intent">
@@ -742,18 +867,16 @@
               <option>Other</option>
             </select>
           </div>
-
           <div class="field">
             <label>How can OpenLearning help your institution?</label>
             <textarea data-k="help" placeholder="Tell us about your goals, challenges, or the outcomes you're hoping to achieve."></textarea>
           </div>
-
-        </div><!-- /#optinFields -->
-      </div><!-- /.optin -->
+        </div>
+      </div>
 
       <div class="submit-row"><button class="btn btn-teal btn-block" id="qualifySubmit">Submit &amp; get my certificate</button></div>
       <p class="form-note">By submitting this form, you consent to OpenLearning processing your information to issue your certificate and respond to your request. For more information, please review our Privacy Policy.</p>
-    </div><!-- /#qualifyCard -->
+    </div>
   </div>
 </section>
 <hr class="sunline">
@@ -773,9 +896,12 @@
 
 <script>
 (function(){
+  'use strict';
+
   var HASHTAG = "#OpenlearningPilipinas";
   var PAGE_URL = "https://pilipinas.openlearning.com";
 
+  /* ── Social share links ── */
   var url = encodeURIComponent(PAGE_URL);
   var li = document.getElementById('shareLinkedIn');
   var fb = document.getElementById('shareFB');
@@ -786,80 +912,110 @@
   var copyLabel = document.getElementById('copyLabel');
   if(copyBtn){
     copyBtn.addEventListener('click', function(){
-      var done = function(){ copyLabel.textContent = "Copied!"; setTimeout(function(){copyLabel.textContent="Copy hashtag";},1600); };
+      var done = function(){ copyLabel.textContent = "Copied!"; setTimeout(function(){ copyLabel.textContent = "Copy hashtag"; }, 1600); };
       if(navigator.clipboard){ navigator.clipboard.writeText(HASHTAG).then(done).catch(done); } else { done(); }
     });
   }
 
-  /* ---------------- GALLERY: scroll strip + 3-dot bar ---------------- */
-  var photoInput = document.getElementById('photoInput');
-  var galleryScroll = document.getElementById('galleryScroll');
-  var dotButtons = Array.prototype.slice.call(document.querySelectorAll('#galleryDotbar [data-dot]'));
-  var lightbox = document.getElementById('photoLightbox');
-  var lightboxImageWrapper = document.getElementById('lightboxImageWrapper');
-  var lightboxCaption = document.getElementById('lightboxCaption');
-  var lightboxClose = document.getElementById('photoLightboxClose');
+  /* ══════════════════════════════════════════════════════
+     SCROLL LOCK — iOS-safe
+     We store the current scrollY, set body to position:fixed
+     at that offset, then restore on unlock.
+  ══════════════════════════════════════════════════════ */
+  var _scrollY = 0;
+  var _lockCount = 0;
+
+  function lockScroll(){
+    if(_lockCount === 0){
+      _scrollY = window.scrollY || window.pageYOffset;
+      document.body.style.top = '-' + _scrollY + 'px';
+      document.body.classList.add('modal-open');
+    }
+    _lockCount++;
+  }
+
+  function unlockScroll(){
+    _lockCount = Math.max(0, _lockCount - 1);
+    if(_lockCount === 0){
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
+      window.scrollTo(0, _scrollY);
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════
+     GALLERY — scroll strip + 3-dot bar
+  ══════════════════════════════════════════════════════ */
+  var photoInput     = document.getElementById('photoInput');
+  var galleryScroll  = document.getElementById('galleryScroll');
+  var dotButtons     = Array.prototype.slice.call(document.querySelectorAll('#galleryDotbar [data-dot]'));
+  var lightbox       = document.getElementById('photoLightbox');
+  var lightboxIW     = document.getElementById('lightboxImageWrapper');
+  var lightboxCap    = document.getElementById('lightboxCaption');
+  var lightboxClose  = document.getElementById('photoLightboxClose');
 
   function maxScrollLeft(){
-    return Math.max(0, galleryScroll.scrollWidth - galleryScroll.clientWidth);
+    return galleryScroll ? Math.max(0, galleryScroll.scrollWidth - galleryScroll.clientWidth) : 0;
   }
 
   function updateDots(){
     if(!galleryScroll) return;
-    var max = maxScrollLeft();
+    var max   = maxScrollLeft();
     var ratio = max <= 0 ? 0 : galleryScroll.scrollLeft / max;
     var active = ratio < 0.34 ? 0 : ratio < 0.67 ? 1 : 2;
-    dotButtons.forEach(function(d,i){ d.classList.toggle('active', i === active); });
+    dotButtons.forEach(function(d, i){ d.classList.toggle('active', i === active); });
     var nextBtn = dotButtons[2];
     if(nextBtn) nextBtn.disabled = max <= 0 || galleryScroll.scrollLeft >= max - 2;
   }
 
   function attachDotHandlers(){
     if(dotButtons[0]) dotButtons[0].addEventListener('click', function(){
-      galleryScroll.scrollTo({left:0, behavior:'smooth'});
+      galleryScroll.scrollTo({ left: 0, behavior: 'smooth' });
     });
     if(dotButtons[1]) dotButtons[1].addEventListener('click', function(){
-      galleryScroll.scrollTo({left:maxScrollLeft()/2, behavior:'smooth'});
+      galleryScroll.scrollTo({ left: maxScrollLeft() / 2, behavior: 'smooth' });
     });
     if(dotButtons[2]) dotButtons[2].addEventListener('click', function(){
-      var max = maxScrollLeft();
+      var max  = maxScrollLeft();
       var next = Math.min(max, galleryScroll.scrollLeft + galleryScroll.clientWidth);
-      galleryScroll.scrollTo({left:next, behavior:'smooth'});
+      galleryScroll.scrollTo({ left: next, behavior: 'smooth' });
     });
   }
 
+  /* ── Lightbox ── */
   function openLightbox(tile){
     if(!lightbox) return;
-    lightboxImageWrapper.innerHTML = '';
+    lightboxIW.innerHTML = '';
     var img = tile.querySelector('img');
     if(img){
       var clone = img.cloneNode();
       clone.alt = img.alt || 'Shared photo';
-      lightboxImageWrapper.appendChild(clone);
-      lightboxCaption.textContent = img.alt || 'Shared photo';
+      lightboxIW.appendChild(clone);
+      lightboxCap.textContent = img.alt || 'Shared photo';
     } else {
       var caption = document.createElement('div');
       caption.className = 'lightbox-text';
       caption.textContent = tile.textContent.trim();
-      lightboxImageWrapper.appendChild(caption);
-      lightboxCaption.textContent = tile.textContent.trim();
+      lightboxIW.appendChild(caption);
+      lightboxCap.textContent = tile.textContent.trim();
     }
     lightbox.classList.add('active');
     lightbox.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('no-scroll');
+    lockScroll();
   }
 
   function closeLightbox(){
-    if(!lightbox) return;
+    if(!lightbox || !lightbox.classList.contains('active')) return;
     lightbox.classList.remove('active');
     lightbox.setAttribute('aria-hidden', 'true');
-    lightboxImageWrapper.innerHTML = '';
-    document.body.classList.remove('no-scroll');
+    lightboxIW.innerHTML = '';
+    unlockScroll();
   }
 
-  function attachTileClicks(){
-    Array.prototype.slice.call(galleryScroll.querySelectorAll('.tile:not(.add)')).forEach(function(tile){
-      tile.removeEventListener('click', tile._clickHandler);
+  function attachTileClicks(container){
+    var c = container || galleryScroll;
+    Array.prototype.slice.call(c.querySelectorAll('.tile:not(.add)')).forEach(function(tile){
+      if(tile._clickHandler) tile.removeEventListener('click', tile._clickHandler);
       tile._clickHandler = function(){ openLightbox(tile); };
       tile.addEventListener('click', tile._clickHandler);
     });
@@ -867,54 +1023,77 @@
 
   if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
   if(lightbox) lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeLightbox(); closePhotoGrid(); } });
 
-  /* ---------------- VIEW ALL PHOTOS: scrollable phone-style grid ---------------- */
-  var viewAllBtn = document.getElementById('viewAllPhotosBtn');
+  /* ══════════════════════════════════════════════════════
+     PHOTO GRID MODAL
+  ══════════════════════════════════════════════════════ */
+  var viewAllBtn     = document.getElementById('viewAllPhotosBtn');
   var photoGridModal = document.getElementById('photoGridModal');
-  var photoGrid = document.getElementById('photoGrid');
+  var photoGrid      = document.getElementById('photoGrid');
   var photoGridClose = document.getElementById('photoGridClose');
 
   function openPhotoGrid(){
     if(!photoGridModal || !photoGrid) return;
     photoGrid.innerHTML = '';
+
     var tiles = Array.prototype.slice.call(galleryScroll.querySelectorAll('.tile:not(.add)'));
-    tiles.forEach(function(t){
-      var img = t.querySelector('img');
-      if(!img) return;
-      var gTile = document.createElement('div');
-      gTile.className = 'grid-tile';
-      var gImg = document.createElement('img');
-      gImg.src = img.src;
-      gImg.alt = img.alt || 'Shared photo';
-      gTile.appendChild(gImg);
-      gTile.addEventListener('click', function(){ openLightbox(gTile); });
-      photoGrid.appendChild(gTile);
-    });
+    if(tiles.length === 0){
+      var empty = document.createElement('p');
+      empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--ink-soft);font-family:var(--body)';
+      empty.textContent = 'No photos yet — be the first to upload one!';
+      photoGrid.appendChild(empty);
+    } else {
+      tiles.forEach(function(t){
+        var img = t.querySelector('img');
+        if(!img) return;
+        var gTile = document.createElement('div');
+        gTile.className = 'grid-tile';
+        var gImg = document.createElement('img');
+        gImg.src = img.src;
+        gImg.alt = img.alt || 'Shared photo';
+        gImg.loading = 'lazy';
+        gTile.appendChild(gImg);
+        gTile.addEventListener('click', function(){ openLightbox(gTile); });
+        photoGrid.appendChild(gTile);
+      });
+    }
+
+    /* Scroll grid back to top each time it opens */
+    photoGrid.scrollTop = 0;
+
     photoGridModal.classList.add('active');
     photoGridModal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('no-scroll');
+    lockScroll();
   }
 
   function closePhotoGrid(){
-    if(!photoGridModal) return;
+    if(!photoGridModal || !photoGridModal.classList.contains('active')) return;
     photoGridModal.classList.remove('active');
     photoGridModal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('no-scroll');
+    unlockScroll();
   }
 
-  if(viewAllBtn) viewAllBtn.addEventListener('click', openPhotoGrid);
+  if(viewAllBtn)     viewAllBtn.addEventListener('click', openPhotoGrid);
   if(photoGridClose) photoGridClose.addEventListener('click', closePhotoGrid);
   if(photoGridModal) photoGridModal.addEventListener('click', function(e){ if(e.target === photoGridModal) closePhotoGrid(); });
 
+  /* Global Escape key closes whichever modal is open */
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(lightbox       && lightbox.classList.contains('active'))       closeLightbox();
+    else if(photoGridModal && photoGridModal.classList.contains('active')) closePhotoGrid();
+  });
+
+  /* Gallery scroll / resize */
   if(galleryScroll){
-    galleryScroll.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); });
+    galleryScroll.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); }, { passive: true });
     attachDotHandlers();
     attachTileClicks();
     updateDots();
-    window.addEventListener('resize', function(){ updateDots(); });
+    window.addEventListener('resize', function(){ updateDots(); }, { passive: true });
   }
 
+  /* ── Render a new photo tile in the strip ── */
   function renderPhotoTile(url, insertAfterAdd){
     var tile = document.createElement('div');
     tile.className = 'tile';
@@ -931,31 +1110,29 @@
     return tile;
   }
 
+  /* Load existing photos from backend */
   function loadExistingPhotos(){
     fetch('/api/get-photos')
       .then(function(res){ return res.json(); })
       .then(function(result){
         if(!result || !result.photos || !result.photos.length) return;
-        result.photos.forEach(function(p){
-          renderPhotoTile(p.url, true);
-        });
+        result.photos.forEach(function(p){ renderPhotoTile(p.url, true); });
         attachTileClicks();
         updateDots();
       })
-      .catch(function(err){ console.error('Loading photos failed:', err); });
+      .catch(function(err){ console.warn('Loading photos failed:', err); });
   }
   loadExistingPhotos();
 
+  /* Upload new photo */
   if(photoInput){
     photoInput.addEventListener('change', function(e){
       var file = e.target.files && e.target.files[0];
       if(!file) return;
-
       var tile = renderPhotoTile(URL.createObjectURL(file), true);
-      var img = tile.querySelector('img');
+      var img  = tile.querySelector('img');
       attachTileClicks();
       updateDots();
-
       fetch('/api/upload-photo', {
         method: 'POST',
         headers: {
@@ -965,22 +1142,21 @@
         body: file
       })
         .then(function(res){ return res.json(); })
-        .then(function(result){
-          if(result && result.url){ img.src = result.url; }
-        })
-        .catch(function(err){ console.error('Photo upload failed:', err); });
-
+        .then(function(result){ if(result && result.url){ img.src = result.url; } })
+        .catch(function(err){ console.warn('Photo upload failed:', err); });
       photoInput.value = '';
     });
   }
 
-  /* ---------------- TAKEAWAY WALL ---------------- */
-  var taAdd = document.getElementById('taAdd');
-  var taName = document.getElementById('taName');
-  var taText = document.getElementById('taText');
+  /* ══════════════════════════════════════════════════════
+     TAKEAWAY WALL
+  ══════════════════════════════════════════════════════ */
+  var taAdd    = document.getElementById('taAdd');
+  var taName   = document.getElementById('taName');
+  var taText   = document.getElementById('taText');
   var taCounter = document.getElementById('taCounter');
-  var taWall = document.getElementById('taWall');
-  var taCount = document.getElementById('taCount');
+  var taWall   = document.getElementById('taWall');
+  var taCount  = document.getElementById('taCount');
 
   function updateCounter(){
     if(!taCounter || !taText) return;
@@ -1000,9 +1176,9 @@
     var pill = document.createElement('span');
     pill.className = 'ta-pill';
     pill.innerHTML = '<span class="ta-avatar"></span><span class="who"></span> · <span class="msg"></span>';
-    pill.querySelector('.ta-avatar').textContent = (n||'G').charAt(0).toUpperCase();
+    pill.querySelector('.ta-avatar').textContent = (n || 'G').charAt(0).toUpperCase();
     pill.querySelector('.who').textContent = n;
-    pill.querySelector('.msg').textContent = t;
+    pill.querySelector('.msg').textContent  = t;
     if(prepend){ taWall.insertBefore(pill, taWall.firstChild); }
     else { taWall.appendChild(pill); }
   }
@@ -1013,38 +1189,36 @@
       .then(function(result){
         if(!result || !result.takeaways || !result.takeaways.length) return;
         taWall.innerHTML = '';
-        result.takeaways.forEach(function(item){
-          renderTakeawayPill(item.name, item.takeaway, true);
-        });
+        result.takeaways.forEach(function(item){ renderTakeawayPill(item.name, item.takeaway, true); });
         updateTaCount();
       })
-      .catch(function(err){ console.error('Loading takeaways failed:', err); });
+      .catch(function(err){ console.warn('Loading takeaways failed:', err); });
   }
   loadExistingTakeaways();
 
   function addTakeaway(){
-    var n = (taName.value||"").trim() || "Guest";
-    var t = (taText.value||"").trim();
+    var n = (taName.value || "").trim() || "Guest";
+    var t = (taText.value || "").trim();
     if(!t){ taText.focus(); return; }
     renderTakeawayPill(n, t, true);
     updateTaCount();
-
     fetch('/api/submit-takeaway', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: n, takeaway: t })
-    }).catch(function(err){ console.error('Takeaway submit failed:', err); });
-
-    taName.value=''; taText.value=''; updateCounter(); taText.focus();
+    }).catch(function(err){ console.warn('Takeaway submit failed:', err); });
+    taName.value = ''; taText.value = ''; updateCounter(); taText.focus();
   }
-  if(taAdd) taAdd.addEventListener('click', addTakeaway);
-  if(taText) taText.addEventListener('keydown', function(e){ if(e.key==='Enter') addTakeaway(); });
+  if(taAdd)  taAdd.addEventListener('click', addTakeaway);
+  if(taText) taText.addEventListener('keydown', function(e){ if(e.key === 'Enter') addTakeaway(); });
 
-  /* ---------------- EVALUATION: star rating ---------------- */
+  /* ══════════════════════════════════════════════════════
+     EVALUATION — star rating
+  ══════════════════════════════════════════════════════ */
   var ratingStars = document.getElementById('ratingStars');
   var ratingLabel = document.getElementById('ratingLabel');
   var ratingInput = document.querySelector('[data-k="rating"]');
-  var RATING_WORDS = {1:'Poor', 2:'Fair', 3:'Good', 4:'Very good', 5:'Excellent'};
+  var RATING_WORDS = { 1:'Poor', 2:'Fair', 3:'Good', 4:'Very good', 5:'Excellent' };
 
   function paintStars(val){
     if(!ratingStars) return;
@@ -1068,12 +1242,12 @@
     });
   }
 
-  /* ---------------- EVALUATION: interest chips ---------------- */
+  /* EVALUATION — interest chips */
   document.querySelectorAll('.chips .chip').forEach(function(chip){
     chip.addEventListener('click', function(){ chip.classList.toggle('on'); });
   });
 
-  /* ---------------- EVALUATION: optional opt-in section ---------------- */
+  /* EVALUATION — opt-in toggle */
   var optinToggle = document.getElementById('optinToggle');
   var optinFields = document.getElementById('optinFields');
   if(optinToggle && optinFields){
@@ -1083,58 +1257,43 @@
     });
   }
 
-  /* ---------------- MOBILE NUMBER VALIDATION ---------------- */
+  /* ══════════════════════════════════════════════════════
+     MOBILE NUMBER VALIDATION
+  ══════════════════════════════════════════════════════ */
   var mobileInput = document.getElementById('mobileInput');
   var mobileError = document.getElementById('mobileError');
 
-  function sanitizeMobile(val){
-    // Strip spaces, dashes, parentheses for digit counting
-    return val.replace(/[\s\-\(\)]/g, '');
-  }
-
+  function sanitizeMobile(val){ return val.replace(/[\s\-\(\)]/g, ''); }
   function validateMobile(val){
-    // Must start with 09 and be exactly 11 digits
     var clean = sanitizeMobile(val);
-    if(clean === '') return true; // empty = optional, no error
+    if(clean === '') return true;
     return /^09\d{9}$/.test(clean);
   }
-
   function showMobileError(show){
     if(!mobileInput || !mobileError) return;
     mobileInput.classList.toggle('error', show);
     mobileError.classList.toggle('visible', show);
   }
-
   if(mobileInput){
-    // Only allow digits, spaces, dashes as user types
     mobileInput.addEventListener('input', function(){
-      // Strip anything that's not a digit, space or dash
       this.value = this.value.replace(/[^\d\s\-]/g, '');
-      // If they've typed enough characters, validate live
-      if(sanitizeMobile(this.value).length >= 11){
-        showMobileError(!validateMobile(this.value));
-      } else {
-        showMobileError(false);
-      }
+      if(sanitizeMobile(this.value).length >= 11){ showMobileError(!validateMobile(this.value)); }
+      else { showMobileError(false); }
     });
-    mobileInput.addEventListener('blur', function(){
-      if(this.value.trim()) showMobileError(!validateMobile(this.value));
-    });
-    mobileInput.addEventListener('focus', function(){
-      showMobileError(false);
-    });
+    mobileInput.addEventListener('blur',  function(){ if(this.value.trim()) showMobileError(!validateMobile(this.value)); });
+    mobileInput.addEventListener('focus', function(){ showMobileError(false); });
   }
 
-  /* ---------------- EVALUATION: submit ---------------- */
+  /* ══════════════════════════════════════════════════════
+     EVALUATION — submit
+  ══════════════════════════════════════════════════════ */
   var qualifyCard = document.getElementById('qualifyCard');
-  var submitBtn = document.getElementById('qualifySubmit');
-  var REQUIRED_KEYS = ['name','email','rating'];
+  var submitBtn   = document.getElementById('qualifySubmit');
+  var REQUIRED_KEYS = ['name', 'email', 'rating'];
 
   function collectQualify(){
     var data = {};
-    qualifyCard.querySelectorAll('[data-k]').forEach(function(el){
-      data[el.getAttribute('data-k')] = el.value.trim();
-    });
+    qualifyCard.querySelectorAll('[data-k]').forEach(function(el){ data[el.getAttribute('data-k')] = el.value.trim(); });
     qualifyCard.querySelectorAll('[data-chips]').forEach(function(group){
       var key = group.getAttribute('data-chips');
       data[key] = Array.prototype.map.call(group.querySelectorAll('.chip.on'), function(c){ return c.textContent.trim(); });
@@ -1149,34 +1308,25 @@
   }
 
   function focusKey(key){
-    var el = qualifyCard.querySelector('[data-k="'+key+'"]');
-    if(key === 'rating'){
-      if(ratingStars) ratingStars.scrollIntoView({behavior:'smooth', block:'center'});
-      return;
-    }
-    if(el){ el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+    if(key === 'rating'){ if(ratingStars) ratingStars.scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+    var el = qualifyCard.querySelector('[data-k="' + key + '"]');
+    if(el){ el.focus(); el.scrollIntoView({ behavior:'smooth', block:'center' }); }
   }
 
   if(submitBtn){
     submitBtn.addEventListener('click', function(){
       var data = collectQualify();
-
-      // Check required fields
-      for(var i=0;i<REQUIRED_KEYS.length;i++){
-        var key = REQUIRED_KEYS[i];
-        if(!data[key]){ focusKey(key); return; }
+      for(var i = 0; i < REQUIRED_KEYS.length; i++){
+        if(!data[REQUIRED_KEYS[i]]){ focusKey(REQUIRED_KEYS[i]); return; }
       }
       if(data.email.indexOf('@') < 0){ focusKey('email'); return; }
-
-      // Validate mobile if opt-in is open and mobile is filled
       if(optinFields && optinFields.classList.contains('open')){
         var mobileVal = (data.mobile || '').trim();
         if(mobileVal && !validateMobile(mobileVal)){
           showMobileError(true);
-          if(mobileInput){ mobileInput.scrollIntoView({behavior:'smooth', block:'center'}); mobileInput.focus(); }
+          if(mobileInput){ mobileInput.scrollIntoView({ behavior:'smooth', block:'center' }); mobileInput.focus(); }
           return;
         }
-        // Store only the digit-clean version
         if(mobileVal) data.mobile = sanitizeMobile(mobileVal);
       }
 
@@ -1188,22 +1338,23 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
-        .catch(function(err){ console.error('Evaluation submit failed:', err); })
+        .catch(function(err){ console.warn('Evaluation submit failed:', err); })
         .finally(function(){
           var first = (data.name.split(' ')[0]) || 'there';
-          var done = document.createElement('div');
+          var done  = document.createElement('div');
           done.className = 'done';
           done.innerHTML = '<div class="mark">&#10003;</div><h4></h4><p></p><p class="sub"></p>';
           done.querySelector('h4').textContent = "Thank you, " + first + "!";
-          done.querySelector('p').textContent = "Your Certificate of Attendance will be sent to " + data.email + " shortly. Please keep an eye on your inbox.";
+          done.querySelector('p').textContent  = "Your Certificate of Attendance will be sent to " + data.email + " shortly. Please keep an eye on your inbox.";
           done.querySelector('.sub').textContent = data.learnMore
             ? "We\u2019ve also noted your interest in learning more \u2014 the OpenLearning Pilipinas team will be in touch."
             : "Thanks for helping us shape the next event.";
           qualifyCard.replaceWith(done);
-          window.scrollTo({top: document.getElementById('step3').offsetTop - 40, behavior:'smooth'});
+          window.scrollTo({ top: document.getElementById('step3').offsetTop - 40, behavior: 'smooth' });
         });
     });
   }
+
 })();
 </script>
 </body>
