@@ -178,208 +178,43 @@
      MODAL FIXES — full-viewport, no bleed, iOS-safe
      ════════════════════════════════════════════════════════ */
 
-  /* Shared backdrop */
-  .photo-grid-modal,
-  .photo-lightbox {
-    position: fixed;
-    top: 0; right: 0; bottom: 0; left: 0;
-    width: 100dvw;
-    height: 100dvh;
-    min-height: 100%;
-    display: none;
-    /* Bottom-sheet on mobile: panel slides up from bottom */
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0;
-    background: rgba(5, 42, 59, 0.88);
-    /* Above topbar (z:40) and everything */
-    z-index: 9999;
-    overflow: hidden;
-    isolation: isolate;
-  }
+  .photo-grid-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+    padding-bottom:max(16px, env(safe-area-inset-bottom));
+    background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
+  .photo-grid-modal.active{display:flex}
+  .photo-grid-panel{position:relative;width:100%;max-width:720px;
+    max-height:min(80dvh, calc(100dvh - 32px));
+    overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
+    display:flex;flex-direction:column}
+  .photo-grid-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex:none;background:#fff}
+  .photo-grid-header h3{font-weight:700;font-size:1.1rem;color:var(--ink)}
+  .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
+    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none}
+  .photo-grid-header .close:hover{background:var(--line)}
+  .photo-grid{flex:0 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
+    -webkit-overflow-scrolling:touch}
+  @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
+  .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
+  .grid-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .15s ease}
+  .grid-tile:hover img{transform:scale(1.05)}
 
-  /* Lightbox stays centred */
-  .photo-lightbox {
-    align-items: center;
-    padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px)
-             env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
-  }
+  .photo-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+    padding-bottom:max(16px, env(safe-area-inset-bottom));
+    background:rgba(5,42,59,.92);z-index:999;isolation:isolate}
+  .photo-lightbox.active{display:flex}
+  .photo-lightbox .lightbox-panel{position:relative;width:100%;max-width:980px;max-height:calc(100dvh - 32px);
+    overflow:auto;border-radius:24px;background:#04191f;box-shadow:0 0 80px rgba(0,0,0,.55)}
+  .photo-lightbox .lightbox-img{background:#04191f;display:flex;align-items:center;justify-content:center;min-height:220px;padding:16px}
+  .photo-lightbox .lightbox-img img{max-width:100%;max-height:min(70dvh,640px);object-fit:contain;border-radius:14px;display:block}
+  .photo-lightbox .lightbox-text{color:#fff;font-size:1.05rem;padding:24px;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;line-height:1.4}
+  .photo-lightbox .lightbox-caption{color:#fff;padding:16px 18px;font-size:.95rem;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
+  .photo-lightbox button.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2}
+  .photo-lightbox button.close:hover{background:rgba(255,255,255,.26)}
 
-  .photo-grid-modal.active,
-  .photo-lightbox.active {
-    display: flex;
-  }
-
-  /* ── Photo Grid panel: sizes to content, capped at 85dvh ── */
-  .photo-grid-panel {
-    position: relative;
-    width: 100%;
-    max-width: 720px;
-    /* Content-driven height — expands with photos, capped so backdrop shows */
-    max-height: 85dvh;
-    border-radius: 20px 20px 0 0;
-    background: #fff;
-    box-shadow: 0 -8px 60px rgba(0,0,0,.35);
-    display: flex;
-    flex-direction: column;
-    /* Home-bar safe area on iOS */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  /* On tablet/desktop: centred floating card */
-  @media(min-width: 600px){
-    .photo-grid-modal { align-items: center; padding: 24px; }
-    .photo-grid-panel {
-      border-radius: 20px;
-      max-height: 80dvh;
-      box-shadow: 0 0 80px rgba(0,0,0,.45);
-      padding-bottom: 0;
-    }
-  }
-
-  .photo-grid-header {
-    flex: none;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 22px 18px 14px;
-    border-bottom: 1px solid var(--line);
-    background: #fff;
-    border-radius: 20px 20px 0 0;
-  }
-  /* Drag-handle pill (mobile bottom-sheet affordance) */
-  .photo-grid-header::before {
-    content: "";
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 36px; height: 4px;
-    border-radius: 99px;
-    background: var(--line);
-  }
-  @media(min-width:600px){
-    .photo-grid-header { padding: 16px 18px; border-radius: 20px 20px 0 0; }
-    .photo-grid-header::before { display: none; }
-  }
-
-  .photo-grid-header h3 {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--ink);
-  }
-
-  .photo-grid-header .close {
-    flex: none;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: var(--mist);
-    color: var(--ink);
-    font-size: 1.25rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    /* Larger tap target */
-    touch-action: manipulation;
-  }
-  .photo-grid-header .close:hover { background: var(--line); }
-
-  /* The scrollable grid inside the panel */
-  .photo-grid {
-    /* flex child: fills remaining panel space, scrolls when content overflows cap */
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Rows size to content so panel expands naturally */
-    grid-auto-rows: min-content;
-    gap: 4px;
-    padding: 4px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-  }
-
-  @media(min-width:560px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
-
-  .grid-tile {
-    position: relative;
-    aspect-ratio: 1;
-    overflow: hidden;
-    cursor: pointer;
-    background: var(--mist);
-  }
-  .grid-tile img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform .15s ease;
-  }
-  .grid-tile:hover img { transform: scale(1.05); }
-
-  /* ── Lightbox panel ── */
-  .photo-lightbox .lightbox-panel {
-    position: relative;
-    width: calc(100% - 32px);
-    max-width: 980px;
-    /* Allow the panel to be tall but not overflow */
-    max-height: calc(100dvh - 32px);
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 20px;
-    background: #04191f;
-    box-shadow: 0 0 80px rgba(0,0,0,.55);
-  }
-
-  .photo-lightbox .lightbox-img {
-    background: #04191f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 180px;
-    padding: 16px;
-  }
-  .photo-lightbox .lightbox-img img {
-    max-width: 100%;
-    max-height: min(65dvh, 600px);
-    object-fit: contain;
-    border-radius: 12px;
-    display: block;
-  }
-  .photo-lightbox .lightbox-text {
-    color: #fff;
-    font-size: 1.05rem;
-    padding: 24px;
-    text-align: center;
-    min-height: 120px;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1.4;
-  }
-  .photo-lightbox .lightbox-caption {
-    color: #fff;
-    padding: 14px 16px;
-    font-size: .9rem;
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,.07);
-  }
-  .photo-lightbox button.close {
-    position: absolute;
-    top: 10px; right: 10px;
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,.16);
-    color: #fff;
-    font-size: 1.3rem;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 2;
-    display: flex; align-items: center; justify-content: center;
-    touch-action: manipulation;
-  }
-  .photo-lightbox button.close:hover { background: rgba(255,255,255,.28); }
 
   /* ════════════════════════════════════════════════════════ */
 
@@ -613,7 +448,7 @@
         <div class="lightbox-img" id="lightboxImageWrapper"></div>
         <div class="lightbox-caption" id="lightboxCaption"></div>
       </div>
-    </div>
+    
   </section>
   <hr class="sunline">
 
