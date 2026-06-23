@@ -36,10 +36,8 @@
   /* ── SCROLL LOCK: works on iOS Safari too ── */
   body.modal-open{
     overflow:hidden;
-    /* iOS needs position:fixed to truly stop rubber-band scroll */
     position:fixed;
     width:100%;
-    /* preserve scroll position via top */
     left:0;
   }
 
@@ -77,7 +75,7 @@
     .tag-chip .long{display:none}
   }
 
-  /* ---- hero (deep teal + glow) ---- */
+  /* ---- hero ---- */
   .hero{position:relative;overflow:hidden;color:#fff;text-align:center;
     background:linear-gradient(160deg,#13727A 0%, var(--teal-deep) 46%, var(--teal-deeper) 100%)}
   .hero .orb.a{width:360px;height:360px;background:radial-gradient(circle,var(--teal-bright),transparent 65%);top:-90px;right:-60px;opacity:.5}
@@ -94,7 +92,7 @@
   .hero .lede{margin-top:14px;font-family:var(--body);font-size:1rem;color:rgba(255,255,255,.9);max-width:40ch;margin-inline:auto}
   .hero .cta{margin-top:22px}
 
-  /* ---- step strip (under hero) ---- */
+  /* ---- step strip ---- */
   .stepstrip{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
   .stepstrip a{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
     background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;
@@ -122,7 +120,7 @@
   section{padding:48px 0;position:relative;overflow:hidden}
   @media(min-width:680px){ section{padding:56px 0} }
 
-  /* ---- step header (numbered, guided) ---- */
+  /* ---- step header ---- */
   .step-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px;position:relative;z-index:2}
   .step-num{flex:none;width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;
     font-family:var(--display);font-weight:800;font-size:1.25rem;color:#fff;
@@ -141,16 +139,14 @@
   .share-btn:hover{background:#fff;border-color:var(--teal);color:var(--teal);box-shadow:0 0 18px -6px rgba(41,167,159,.6)}
   .share-btn svg{width:17px;height:17px;flex:none}
 
-  /* ---- gallery: scrollable strip + 3-dot bar ---- */
+  /* ---- gallery ---- */
   .gallery{position:relative;z-index:2}
   .gallery-scroll{
     display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:6px;padding-bottom:2px;margin:0 -4px -6px;padding-inline:4px
   }
   .gallery-scroll::-webkit-scrollbar{display:none}
-  .gallery-scroll .tile{
-    flex:0 0 calc(50% - 5px);scroll-snap-align:start;
-  }
+  .gallery-scroll .tile{flex:0 0 calc(50% - 5px);scroll-snap-align:start}
   @media(min-width:560px){ .gallery-scroll .tile{flex-basis:calc(33.333% - 7px)} }
   @media(min-width:920px){ .gallery-scroll .tile{flex-basis:calc(25% - 7.5px)} }
   .tile{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;
@@ -171,52 +167,81 @@
   .gallery-dotbar button.next.active{background:var(--teal)}
   .gallery-dotbar button:disabled{opacity:.3;cursor:default}
   .gallery-hint{text-align:center;font-family:var(--body);font-size:.78rem;color:var(--ink-soft);margin-top:8px}
-
   .viewall-btn{display:flex;width:100%;margin-top:16px}
 
-  /* ════════════════════════════════════════════════════════
-     MODAL FIXES — full-viewport, no bleed, iOS-safe
-     ════════════════════════════════════════════════════════ */
-
-  .photo-grid-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+  /* ══════════════════════════════════════════════════════
+     MODALS — position:fixed, outside any overflow:hidden parent
+     isolation removed to avoid stacking context conflicts
+  ══════════════════════════════════════════════════════ */
+  .photo-grid-modal{
+    position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;
+    padding-top:max(16px, env(safe-area-inset-top));
     padding-bottom:max(16px, env(safe-area-inset-bottom));
-    background:rgba(5,42,59,.92);z-index:998;isolation:isolate}
+    background:rgba(5,42,59,.92);z-index:998
+  }
   .photo-grid-modal.active{display:flex}
-  .photo-grid-panel{position:relative;width:100%;max-width:720px;
+  .photo-grid-panel{
+    position:relative;width:100%;max-width:720px;
     max-height:min(80dvh, calc(100dvh - 32px));
-    overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.55);
-    display:flex;flex-direction:column}
-  .photo-grid-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;
-    border-bottom:1px solid var(--line);flex:none;background:#fff}
+    overflow:hidden;border-radius:24px;background:#fff;
+    box-shadow:0 0 80px rgba(0,0,0,.55);display:flex;flex-direction:column
+  }
+  .photo-grid-header{
+    position:sticky;top:0;z-index:5;display:flex;align-items:center;
+    justify-content:space-between;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex:none;background:#fff
+  }
   .photo-grid-header h3{font-weight:700;font-size:1.1rem;color:var(--ink)}
-  .photo-grid-header .close{position:static;width:34px;height:34px;border-radius:50%;border:none;
-    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none}
+  .photo-grid-header .close{
+    position:static;width:34px;height:34px;border-radius:50%;border:none;
+    background:var(--mist);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;flex:none
+  }
   .photo-grid-header .close:hover{background:var(--line)}
-  .photo-grid{flex:0 1 auto;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
-    -webkit-overflow-scrolling:touch}
+  .photo-grid{
+    flex:0 1 auto;min-height:0;overflow-y:auto;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;
+    -webkit-overflow-scrolling:touch
+  }
   @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
   .grid-tile{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer;background:var(--mist)}
   .grid-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .15s ease}
   .grid-tile:hover img{transform:scale(1.05)}
 
-  .photo-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    padding:16px;padding-top:max(16px, env(safe-area-inset-top));
+  .photo-lightbox{
+    position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    padding:16px;
+    padding-top:max(16px, env(safe-area-inset-top));
     padding-bottom:max(16px, env(safe-area-inset-bottom));
-    background:rgba(5,42,59,.92);z-index:999;isolation:isolate}
+    background:rgba(5,42,59,.92);z-index:999
+  }
   .photo-lightbox.active{display:flex}
-  .photo-lightbox .lightbox-panel{position:relative;width:100%;max-width:980px;max-height:calc(100dvh - 32px);
-    overflow:auto;border-radius:24px;background:#04191f;box-shadow:0 0 80px rgba(0,0,0,.55)}
-  .photo-lightbox .lightbox-img{background:#04191f;display:flex;align-items:center;justify-content:center;min-height:220px;padding:16px}
-  .photo-lightbox .lightbox-img img{max-width:100%;max-height:min(70dvh,640px);object-fit:contain;border-radius:14px;display:block}
-  .photo-lightbox .lightbox-text{color:#fff;font-size:1.05rem;padding:24px;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;line-height:1.4}
-  .photo-lightbox .lightbox-caption{color:#fff;padding:16px 18px;font-size:.95rem;text-align:center;border-top:1px solid rgba(255,255,255,.07)}
-  .photo-lightbox button.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
-    background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2}
+  .photo-lightbox .lightbox-panel{
+    position:relative;width:100%;max-width:980px;
+    max-height:calc(100dvh - 32px);overflow:auto;
+    border-radius:24px;background:#04191f;box-shadow:0 0 80px rgba(0,0,0,.55)
+  }
+  .photo-lightbox .lightbox-img{
+    background:#04191f;display:flex;align-items:center;
+    justify-content:center;min-height:220px;padding:16px
+  }
+  .photo-lightbox .lightbox-img img{
+    max-width:100%;max-height:min(70dvh,640px);
+    object-fit:contain;border-radius:14px;display:block
+  }
+  .photo-lightbox .lightbox-text{
+    color:#fff;font-size:1.05rem;padding:24px;text-align:center;
+    min-height:160px;display:flex;align-items:center;justify-content:center;line-height:1.4
+  }
+  .photo-lightbox .lightbox-caption{
+    color:#fff;padding:16px 18px;font-size:.95rem;
+    text-align:center;border-top:1px solid rgba(255,255,255,.07)
+  }
+  .photo-lightbox button.close{
+    position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;z-index:2
+  }
   .photo-lightbox button.close:hover{background:rgba(255,255,255,.26)}
-
-
-  /* ════════════════════════════════════════════════════════ */
 
   /* ---- takeaway ---- */
   .takeaway-section{background:linear-gradient(180deg,var(--mist),var(--mist-tint))}
@@ -310,18 +335,54 @@
 
   .req{color:var(--teal);font-weight:700}
 
+  /* ══════════════════════════════════════════════════════
+     OPT-IN CTA — redesigned as a prominent card
+  ══════════════════════════════════════════════════════ */
   .optin{margin-top:30px;padding-top:24px;border-top:1px dashed var(--line)}
-  .optin-toggle{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
-    background:var(--mist-tint);border:1px solid var(--line);border-radius:14px;padding:15px 17px;transition:.15s;font-family:var(--body)}
-  .optin-toggle:hover{border-color:var(--teal);box-shadow:0 0 20px -10px rgba(41,167,159,.5)}
-  .optin-toggle .ot-ico{flex:none;font-size:1.25rem}
-  .optin-toggle .ot-copy{flex:1;min-width:0}
-  .optin-toggle .ot-copy b{display:block;font-family:var(--display);font-weight:700;font-size:.98rem;color:var(--ink)}
-  .optin-toggle .ot-copy span{font-size:.8rem;color:var(--ink-soft)}
-  .optin-toggle .ot-chev{flex:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-    color:var(--teal);transition:transform .2s ease}
-  .optin-toggle[aria-expanded="true"] .ot-chev{transform:rotate(180deg)}
-  .optin-fields{display:none;margin-top:16px;animation:slidein .3s ease}
+  .optin-card{
+    background:linear-gradient(135deg,rgba(41,167,159,.08) 0%,rgba(138,123,255,.10) 100%);
+    border:1.5px solid var(--teal);border-radius:var(--radius);
+    padding:22px 22px 20px;cursor:pointer;transition:border-color .18s, box-shadow .18s;
+    position:relative;overflow:hidden;text-align:left;width:100%;
+    font-family:inherit
+  }
+  .optin-card:hover{border-color:var(--violet);box-shadow:0 0 36px -10px rgba(41,167,159,.35)}
+  .optin-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(90deg,var(--teal),var(--violet));
+    color:#fff;font-family:var(--display);font-size:.68rem;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;
+    border-radius:999px;padding:4px 12px;margin-bottom:14px
+  }
+  .optin-card-body{display:flex;gap:16px;align-items:flex-start}
+  .optin-icon{
+    flex:none;width:54px;height:54px;border-radius:16px;
+    background:linear-gradient(135deg,var(--teal),var(--violet));
+    display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+    box-shadow:0 4px 18px -4px rgba(41,167,159,.55)
+  }
+  .optin-copy{flex:1;min-width:0}
+  .optin-copy strong{
+    display:block;font-family:var(--display);font-weight:800;
+    font-size:1.12rem;color:var(--ink);line-height:1.25;margin-bottom:6px
+  }
+  .optin-copy p{
+    font-family:var(--body);font-size:.88rem;
+    color:var(--ink-soft);line-height:1.55;margin:0
+  }
+  .optin-expand{
+    margin-top:16px;display:flex;align-items:center;gap:9px;
+    font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--teal)
+  }
+  .optin-expand .chev-circle{
+    width:26px;height:26px;border-radius:50%;background:var(--teal);
+    display:flex;align-items:center;justify-content:center;flex:none;
+    transition:transform .22s ease
+  }
+  .optin-card[aria-expanded="true"] .chev-circle{transform:rotate(180deg)}
+  .optin-card[aria-expanded="true"]{border-color:var(--violet);box-shadow:0 0 36px -10px rgba(138,123,255,.3)}
+
+  .optin-fields{display:none;margin-top:20px;padding-top:20px;border-top:1px dashed var(--line);animation:slidein .3s ease}
   .optin-fields.open{display:block}
 
   @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
@@ -431,68 +492,72 @@
       <p class="gallery-hint">Swipe the photos, or tap the dots to browse →</p>
       <button class="btn btn-teal viewall-btn" id="viewAllPhotosBtn" type="button">View all photos</button>
     </div>
+  </div>
+</section>
+<!-- ↑ section.photos ends here — modals live OUTSIDE so overflow:hidden never clips them -->
 
-    <div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
-      <div class="photo-grid-panel">
-        <div class="photo-grid-header">
-          <h3>All photos</h3>
-          <button class="close" id="photoGridClose" aria-label="Close">×</button>
-        </div>
-        <div class="photo-grid" id="photoGrid"></div>
+<!-- PHOTO GRID MODAL — sibling of sections, not nested inside any overflow:hidden -->
+<div class="photo-grid-modal" id="photoGridModal" aria-hidden="true">
+  <div class="photo-grid-panel">
+    <div class="photo-grid-header">
+      <h3>All photos</h3>
+      <button class="close" id="photoGridClose" aria-label="Close">×</button>
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
+  </div>
+</div>
+
+<!-- PHOTO LIGHTBOX — sibling of sections, not nested inside any overflow:hidden -->
+<div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+  <div class="lightbox-panel">
+    <button class="close" id="photoLightboxClose" aria-label="Close">×</button>
+    <div class="lightbox-img" id="lightboxImageWrapper"></div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<hr class="sunline">
+
+<!-- STEP 2 · SHARE ONE TAKEAWAY -->
+<section class="takeaway-section" id="step2">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <div>
+        <p class="eyebrow">One insight</p>
+        <h2>What is one insight you're taking home today?</h2>
+        <p>Sum it up in a sentence and add it to the wall — your words might spark someone else's next idea.</p>
       </div>
     </div>
 
-    <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
-      <div class="lightbox-panel">
-        <button class="close" id="photoLightboxClose" aria-label="Close">×</button>
-        <div class="lightbox-img" id="lightboxImageWrapper"></div>
-        <div class="lightbox-caption" id="lightboxCaption"></div>
-      </div>
-    
-  </section>
-  <hr class="sunline">
-
-
-  <!-- STEP 2 · SHARE ONE TAKEAWAY -->
-  <section class="takeaway-section" id="step2">
-    <div class="wrap">
-      <div class="step-head">
-        <span class="step-num">2</span>
+    <div class="takeaway">
+      <div class="takeaway-head">
+        <span class="ta-icon">💡</span>
         <div>
-          <p class="eyebrow">One insight</p>
-          <h2>What is one insight you're taking home today?</h2>
-          <p>Sum it up in a sentence and add it to the wall — your words might spark someone else's next idea.</p>
+          <h3>Add your insight to the wall</h3>
+          <p class="count"><b id="taCount">0</b> insights shared so far today</p>
         </div>
       </div>
-
-      <div class="takeaway">
-        <div class="takeaway-head">
-          <span class="ta-icon">💡</span>
-          <div>
-            <h3>Add your insight to the wall</h3>
-            <p class="count"><b id="taCount">0</b> insights shared so far today</p>
-          </div>
+      <div class="ta-form">
+        <div class="ta-field">
+          <label for="taName">First name</label>
+          <input type="text" id="taName" placeholder="Your name" maxlength="24">
         </div>
-        <div class="ta-form">
-          <div class="ta-field">
-            <label for="taName">First name</label>
-            <input type="text" id="taName" placeholder="Your name" maxlength="24">
-          </div>
-          <div class="ta-field">
-            <label for="taText">Your insight</label>
-            <input type="text" id="taText" placeholder="e.g. Designing AI-ready curriculum" maxlength="60">
-            <span class="ta-counter" id="taCounter">60 characters left</span>
-          </div>
-          <div class="ta-field">
-            <label class="spacer" aria-hidden="true">Add</label>
-            <button class="btn btn-ink" id="taAdd">Add to wall</button>
-          </div>
+        <div class="ta-field">
+          <label for="taText">Your insight</label>
+          <input type="text" id="taText" placeholder="e.g. Designing AI-ready curriculum" maxlength="60">
+          <span class="ta-counter" id="taCounter">60 characters left</span>
         </div>
-        <div class="ta-wall" id="taWall"></div>
+        <div class="ta-field">
+          <label class="spacer" aria-hidden="true">Add</label>
+          <button class="btn btn-ink" id="taAdd">Add to wall</button>
+        </div>
       </div>
+      <div class="ta-wall" id="taWall"></div>
     </div>
-  </section>
-  <hr class="sunline">
+  </div>
+</section>
+<hr class="sunline">
 
 <!-- STEP 3 · EVALUATION + CERTIFICATE -->
 <section class="evaluate" id="step3">
@@ -594,16 +659,26 @@
         <textarea data-k="comments" placeholder="Anything else you'd like to share with the team?"></textarea>
       </div>
 
+      <!-- OPT-IN CTA — redesigned as a prominent, clickable card -->
       <div class="optin">
-        <button type="button" class="optin-toggle" id="optinToggle" aria-expanded="false" aria-controls="optinFields">
-          <span class="ot-ico">🚀</span>
-          <span class="ot-copy">
-            <b>Interested in OpenLearning for your institution?</b>
-            <span>Optional — tell us about your organization and we'll follow up.</span>
-          </span>
-          <span class="ot-chev">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </span>
+        <button type="button" class="optin-card" id="optinToggle"
+                aria-expanded="false" aria-controls="optinFields">
+          <div class="optin-card-body">
+            <span class="optin-icon">🚀</span>
+            <div class="optin-copy">
+              <strong>Interested in OpenLearning for your institution?</strong>
+              <p>Tell us a little about your organization and goals — our Pilipinas team will personally follow up with you.</p>
+              <div class="optin-expand">
+                <span>Yes, I'd like to learn more</span>
+                <span class="chev-circle">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                       stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
         </button>
 
         <div class="optin-fields" id="optinFields">
@@ -706,6 +781,7 @@
           </div>
         </div>
       </div>
+      <!-- end .optin -->
 
       <div class="submit-row"><button class="btn btn-teal btn-block" id="qualifySubmit">Submit &amp; get my certificate</button></div>
       <p class="form-note">By submitting this form, you consent to OpenLearning processing your information to issue your certificate and respond to your request. For more information, please review our Privacy Policy.</p>
@@ -731,31 +807,34 @@
 (function(){
   'use strict';
 
-  var HASHTAG = "#OpenlearningPilipinas";
+  var HASHTAG  = "#OpenlearningPilipinas";
   var PAGE_URL = "https://pilipinas.openlearning.com";
 
   /* ── Social share links ── */
   var url = encodeURIComponent(PAGE_URL);
-  var li = document.getElementById('shareLinkedIn');
-  var fb = document.getElementById('shareFB');
+  var li  = document.getElementById('shareLinkedIn');
+  var fb  = document.getElementById('shareFB');
   if(li) li.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + url;
   if(fb) fb.href = "https://www.facebook.com/sharer/sharer.php?u=" + url;
 
-  var copyBtn = document.getElementById('copyTag');
+  var copyBtn   = document.getElementById('copyTag');
   var copyLabel = document.getElementById('copyLabel');
   if(copyBtn){
     copyBtn.addEventListener('click', function(){
-      var done = function(){ copyLabel.textContent = "Copied!"; setTimeout(function(){ copyLabel.textContent = "Copy hashtag"; }, 1600); };
-      if(navigator.clipboard){ navigator.clipboard.writeText(HASHTAG).then(done).catch(done); } else { done(); }
+      var done = function(){
+        copyLabel.textContent = "Copied!";
+        setTimeout(function(){ copyLabel.textContent = "Copy hashtag"; }, 1600);
+      };
+      if(navigator.clipboard){ navigator.clipboard.writeText(HASHTAG).then(done).catch(done); }
+      else { done(); }
     });
   }
 
   /* ══════════════════════════════════════════════════════
      SCROLL LOCK — iOS-safe
-     We store the current scrollY, set body to position:fixed
-     at that offset, then restore on unlock.
+     Store scrollY, fix body at that offset, restore on unlock.
   ══════════════════════════════════════════════════════ */
-  var _scrollY = 0;
+  var _scrollY   = 0;
   var _lockCount = 0;
 
   function lockScroll(){
@@ -779,13 +858,13 @@
   /* ══════════════════════════════════════════════════════
      GALLERY — scroll strip + 3-dot bar
   ══════════════════════════════════════════════════════ */
-  var photoInput     = document.getElementById('photoInput');
-  var galleryScroll  = document.getElementById('galleryScroll');
-  var dotButtons     = Array.prototype.slice.call(document.querySelectorAll('#galleryDotbar [data-dot]'));
-  var lightbox       = document.getElementById('photoLightbox');
-  var lightboxIW     = document.getElementById('lightboxImageWrapper');
-  var lightboxCap    = document.getElementById('lightboxCaption');
-  var lightboxClose  = document.getElementById('photoLightboxClose');
+  var photoInput    = document.getElementById('photoInput');
+  var galleryScroll = document.getElementById('galleryScroll');
+  var dotButtons    = Array.prototype.slice.call(document.querySelectorAll('#galleryDotbar [data-dot]'));
+  var lightbox      = document.getElementById('photoLightbox');
+  var lightboxIW    = document.getElementById('lightboxImageWrapper');
+  var lightboxCap   = document.getElementById('lightboxCaption');
+  var lightboxClose = document.getElementById('photoLightboxClose');
 
   function maxScrollLeft(){
     return galleryScroll ? Math.max(0, galleryScroll.scrollWidth - galleryScroll.clientWidth) : 0;
@@ -793,8 +872,8 @@
 
   function updateDots(){
     if(!galleryScroll) return;
-    var max   = maxScrollLeft();
-    var ratio = max <= 0 ? 0 : galleryScroll.scrollLeft / max;
+    var max    = maxScrollLeft();
+    var ratio  = max <= 0 ? 0 : galleryScroll.scrollLeft / max;
     var active = ratio < 0.34 ? 0 : ratio < 0.67 ? 1 : 2;
     dotButtons.forEach(function(d, i){ d.classList.toggle('active', i === active); });
     var nextBtn = dotButtons[2];
@@ -855,7 +934,7 @@
   }
 
   if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-  if(lightbox) lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  if(lightbox)      lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
 
   /* ══════════════════════════════════════════════════════
      PHOTO GRID MODAL
@@ -882,8 +961,8 @@
         var gTile = document.createElement('div');
         gTile.className = 'grid-tile';
         var gImg = document.createElement('img');
-        gImg.src = img.src;
-        gImg.alt = img.alt || 'Shared photo';
+        gImg.src     = img.src;
+        gImg.alt     = img.alt || 'Shared photo';
         gImg.loading = 'lazy';
         gTile.appendChild(gImg);
         gTile.addEventListener('click', function(){ openLightbox(gTile); });
@@ -891,9 +970,7 @@
       });
     }
 
-    /* Scroll grid back to top each time it opens */
     photoGrid.scrollTop = 0;
-
     photoGridModal.classList.add('active');
     photoGridModal.setAttribute('aria-hidden', 'false');
     lockScroll();
@@ -910,7 +987,7 @@
   if(photoGridClose) photoGridClose.addEventListener('click', closePhotoGrid);
   if(photoGridModal) photoGridModal.addEventListener('click', function(e){ if(e.target === photoGridModal) closePhotoGrid(); });
 
-  /* Global Escape key closes whichever modal is open */
+  /* Escape key closes whichever modal is open */
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Escape') return;
     if(lightbox       && lightbox.classList.contains('active'))       closeLightbox();
@@ -926,7 +1003,7 @@
     window.addEventListener('resize', function(){ updateDots(); }, { passive: true });
   }
 
-  /* ── Render a new photo tile in the strip ── */
+  /* ── Render a new photo tile ── */
   function renderPhotoTile(url, insertAfterAdd){
     var tile = document.createElement('div');
     tile.className = 'tile';
@@ -984,12 +1061,12 @@
   /* ══════════════════════════════════════════════════════
      TAKEAWAY WALL
   ══════════════════════════════════════════════════════ */
-  var taAdd    = document.getElementById('taAdd');
-  var taName   = document.getElementById('taName');
-  var taText   = document.getElementById('taText');
+  var taAdd     = document.getElementById('taAdd');
+  var taName    = document.getElementById('taName');
+  var taText    = document.getElementById('taText');
   var taCounter = document.getElementById('taCounter');
-  var taWall   = document.getElementById('taWall');
-  var taCount  = document.getElementById('taCount');
+  var taWall    = document.getElementById('taWall');
+  var taCount   = document.getElementById('taCount');
 
   function updateCounter(){
     if(!taCounter || !taText) return;
@@ -1013,7 +1090,7 @@
     pill.querySelector('.who').textContent = n;
     pill.querySelector('.msg').textContent  = t;
     if(prepend){ taWall.insertBefore(pill, taWall.firstChild); }
-    else { taWall.appendChild(pill); }
+    else        { taWall.appendChild(pill); }
   }
 
   function loadExistingTakeaways(){
@@ -1080,13 +1157,21 @@
     chip.addEventListener('click', function(){ chip.classList.toggle('on'); });
   });
 
-  /* EVALUATION — opt-in toggle */
+  /* ══════════════════════════════════════════════════════
+     OPT-IN TOGGLE
+  ══════════════════════════════════════════════════════ */
   var optinToggle = document.getElementById('optinToggle');
   var optinFields = document.getElementById('optinFields');
+
   if(optinToggle && optinFields){
     optinToggle.addEventListener('click', function(){
       var open = optinFields.classList.toggle('open');
       optinToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    /* Keyboard support — card is a <button> so Enter/Space already fire click,
+       but Space on a <button> scrolls by default; preventDefault keeps it clean */
+    optinToggle.addEventListener('keydown', function(e){
+      if(e.key === ' '){ e.preventDefault(); optinToggle.click(); }
     });
   }
 
@@ -1132,9 +1217,9 @@
       data[key] = Array.prototype.map.call(group.querySelectorAll('.chip.on'), function(c){ return c.textContent.trim(); });
     });
     qualifyCard.querySelectorAll('[data-radio]').forEach(function(group){
-      var key = group.getAttribute('data-radio');
+      var key     = group.getAttribute('data-radio');
       var checked = group.querySelector('input:checked');
-      data[key] = checked ? checked.value : '';
+      data[key]   = checked ? checked.value : '';
     });
     data.learnMore = optinFields ? optinFields.classList.contains('open') : false;
     return data;
