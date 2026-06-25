@@ -205,13 +205,13 @@
   }
   @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
   .grid-tile{
-  position:relative;
-  aspect-ratio:1 / 1;
-  overflow:hidden;
-  cursor:pointer;
-  background:var(--mist);
-  /* Force the grid cell to never stretch vertically */
-  align-self:start;
+    position:relative;
+    width:100%;
+    padding-bottom:100%;   /* creates a perfect square regardless of grid row height */
+    overflow:hidden;
+    cursor:pointer;
+    background:var(--mist);
+    align-self:start;      /* prevents grid stretching this cell to match neighbours */
   }
   .grid-tile img{
     position:absolute;
@@ -220,9 +220,16 @@
     height:100%;
     object-fit:cover;
     display:block;
-    transition:transform .15s ease
+    transition:transform .15s ease;
   }
   .grid-tile:hover img{transform:scale(1.05)}
+ 
+  /* Hide broken/failed tiles cleanly — no ghost gaps */
+  .grid-tile.hidden,
+  .tile.hidden{
+    display:none!important;
+  }
+
 
   .photo-lightbox{
     position:fixed;inset:0;display:none;align-items:center;justify-content:center;
@@ -1020,15 +1027,23 @@
   }
 
   /* ── Render a new photo tile ── */
-  function renderPhotoTile(url, insertAfterAdd){
+  function renderPhotoTile(src, insertAfterAdd){
     var tile = document.createElement('div');
     tile.className = 'tile';
+ 
     var img = document.createElement('img');
-    img.src = url;
-    img.alt = "Shared photo";
+    img.alt = 'Shared photo';
+ 
+    // If the image fails (e.g. broken URL), hide the tile entirely
+    img.onerror = function(){
+      tile.classList.add('hidden');
+    };
+ 
+    img.src = src;
     tile.appendChild(img);
-    if(insertAfterAdd){
-      var addTile = galleryScroll.querySelector('.tile.add');
+ 
+    var addTile = galleryScroll.querySelector('.tile.add');
+    if(insertAfterAdd && addTile){
       addTile.insertAdjacentElement('afterend', tile);
     } else {
       galleryScroll.appendChild(tile);
