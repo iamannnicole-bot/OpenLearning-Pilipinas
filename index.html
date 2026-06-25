@@ -204,14 +204,36 @@
     -webkit-overflow-scrolling:touch
   }
   @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
+  .photo-grid{
+    flex:0 1 auto;min-height:0;overflow-y:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:3px;padding:3px;
+    -webkit-overflow-scrolling:touch;
+    /* Tell Safari each row is as tall as each column is wide */
+    grid-auto-rows:1fr;
+  }
+  @media(min-width:560px){ .photo-grid{grid-template-columns:repeat(4,1fr)} }
+ 
+  /* Wrapper trick: a zero-height element that forces a square intrinsic size
+     so Safari has a non-circular reference for aspect-ratio */
   .grid-tile{
     position:relative;
-    width:100%;
-    padding-bottom:100%;   /* creates a perfect square regardless of grid row height */
     overflow:hidden;
     cursor:pointer;
     background:var(--mist);
-    align-self:start;      /* prevents grid stretching this cell to match neighbours */
+    /* aspect-ratio works on Safari 15+ (iOS 15+, Sep 2021) */
+    aspect-ratio:1 / 1;
+    /* Prevent grid from stretching this cell taller than its column is wide */
+    align-self:stretch;
+    min-height:0;
+  }
+  /* Inner sizer — a pseudo-element that provides a concrete height reference
+     so the absolute img always fills the tile correctly on older Safari */
+  .grid-tile::before{
+    content:"";
+    display:block;
+    padding-top:100%;   /* this is on a block-level pseudo, not a grid child — resolves correctly */
   }
   .grid-tile img{
     position:absolute;
